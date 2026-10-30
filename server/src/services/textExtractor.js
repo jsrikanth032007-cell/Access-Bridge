@@ -72,3 +72,4 @@ export const extractTextFromUrl = async (url) => {
     throw new Error(`Failed to fetch web content from URL: ${error.message}`);
   }
 };
+

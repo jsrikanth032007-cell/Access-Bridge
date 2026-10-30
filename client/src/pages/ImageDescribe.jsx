@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAccessibility } from '../context/AccessibilityContext.jsx';
+import { useTTS } from '../hooks/useTTS.js';
 import api from '../services/api.js';
 import {
   Eye,
@@ -11,14 +12,26 @@ import {
   FileText,
   Volume2,
   Image as ImageIcon,
+  Languages,
 } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner.jsx';
 import { TTSButton } from '../components/SpeechControls.jsx';
 
+const ALL_LANGUAGES = [
+  { id: 'English', label: 'English', native: 'English' },
+  { id: 'Tamil', label: 'Tamil', native: 'தமிழ்' },
+  { id: 'Hindi', label: 'Hindi', native: 'हिन्दी' },
+  { id: 'Telugu', label: 'Telugu', native: 'తెలుగు' },
+  { id: 'Malayalam', label: 'Malayalam', native: 'മലയാളം' },
+  { id: 'Kannada', label: 'Kannada', native: 'ಕನ್ನಡ' },
+];
+
 export default function ImageDescribe() {
   const { settings } = useAccessibility();
+  const { speak } = useTTS();
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [language, setLanguage] = useState(settings.preferredLanguage || 'English');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
@@ -47,6 +60,7 @@ export default function ImageDescribe() {
 
     const formData = new FormData();
     formData.append('image', selectedFile);
+    formData.append('language', language);
 
     try {
       setIsLoading(true);
@@ -58,12 +72,10 @@ export default function ImageDescribe() {
       if (res.data.success) {
         setResult(res.data.result);
 
-        // Auto read aloud if enabled in profile
-        if (settings.autoReadAloud && window.speechSynthesis) {
-          const textToSpeak = `Alt text: ${res.data.result.altText}. Detailed description: ${res.data.result.detailedDescription}. Visible text: ${res.data.result.detectedText}`;
-          const utterance = new SpeechSynthesisUtterance(textToSpeak);
-          utterance.rate = 0.95;
-          window.speechSynthesis.speak(utterance);
+        // Auto read aloud if enabled in profile or blind accessibility mode
+        if ((settings.autoReadAloud || settings.blindAccessibilityMode)) {
+          const textToSpeak = `${res.data.result.altText}. ${res.data.result.detailedDescription}`;
+          speak(textToSpeak, language);
         }
       }
     } catch (err) {
@@ -100,7 +112,7 @@ export default function ImageDescribe() {
         <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
           Upload any picture, transit diagram, flyer, or infographic. Gemini AI produces concise
           screen-reader alt-text, an in-depth spatial description for blind users, and transcribes
-          all text detected within the image.
+          all text detected within the image in your preferred language.
         </p>
       </div>
 
@@ -121,6 +133,35 @@ export default function ImageDescribe() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Language Selection */}
+          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2">
+            <label
+              htmlFor="image-language-select"
+              className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5"
+            >
+              <Languages className="w-4 h-4 text-emerald-600" aria-hidden="true" />
+              <span>Describe Image in Language:</span>
+            </label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+              {ALL_LANGUAGES.map((lang) => (
+                <button
+                  type="button"
+                  key={lang.id}
+                  onClick={() => setLanguage(lang.id)}
+                  className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all flex flex-col items-center justify-center ${
+                    language === lang.id
+                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-md ring-2 ring-emerald-400'
+                      : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
+                  }`}
+                  aria-pressed={language === lang.id}
+                >
+                  <span className="text-sm">{lang.native}</span>
+                  <span className="text-[10px] opacity-80">{lang.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl p-8 text-center space-y-4 bg-slate-50 dark:bg-slate-800/40">
             {previewUrl ? (
               <div className="space-y-3">
@@ -179,11 +220,11 @@ export default function ImageDescribe() {
             className="w-full py-3.5 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-base shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {isLoading ? (
-              <LoadingSpinner message="Gemini AI vision is analyzing the image..." size="sm" />
+              <LoadingSpinner message={`Gemini AI vision is analyzing the image in ${language}...`} size="sm" />
             ) : (
               <>
                 <Sparkles className="w-5 h-5" aria-hidden="true" />
-                <span>Generate Assistive Vision Description</span>
+                <span>Generate Assistive Vision Description ({language})</span>
               </>
             )}
           </button>
@@ -200,11 +241,12 @@ export default function ImageDescribe() {
           {/* Header Action Bar */}
           <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
             <span className="font-bold text-emerald-900 dark:text-emerald-200 text-sm">
-              Visual Analysis Ready
+              Visual Analysis Ready ({language})
             </span>
             <TTSButton
-              text={`Alt-text: ${result.altText}. Detailed scene description: ${result.detailedDescription}. Detected text: ${result.detectedText}`}
-              label="Listen to Full Vision Report"
+              text={`${result.altText}. ${result.detailedDescription}. ${result.detectedText}`}
+              language={language}
+              label={`Listen in ${language}`}
             />
           </div>
 
@@ -216,7 +258,7 @@ export default function ImageDescribe() {
                 <span>Concise Alt-Text (Screen Reader Ready)</span>
               </h2>
               <div className="flex items-center gap-2">
-                <TTSButton text={result.altText} label="Read" />
+                <TTSButton text={result.altText} language={language} label="Read" />
                 <button
                   onClick={() => handleCopy(result.altText, 'alt')}
                   className="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white flex items-center gap-1 text-xs font-semibold"
@@ -249,7 +291,7 @@ export default function ImageDescribe() {
                 <FileText className="w-5 h-5 text-emerald-600" aria-hidden="true" />
                 <span>Detailed Scene Description for Blind Users</span>
               </h2>
-              <TTSButton text={result.detailedDescription} label="Read Description" />
+              <TTSButton text={result.detailedDescription} language={language} label={`Read Description (${language})`} />
             </div>
 
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 leading-relaxed whitespace-pre-line text-base">
@@ -264,7 +306,7 @@ export default function ImageDescribe() {
                 <Volume2 className="w-5 h-5 text-purple-600" aria-hidden="true" />
                 <span>Detected Text in Image (OCR)</span>
               </h2>
-              <TTSButton text={result.detectedText} label="Read Detected Text" />
+              <TTSButton text={result.detectedText} language={language} label="Read Detected Text" />
             </div>
 
             <div className="p-4 rounded-xl bg-purple-50/40 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800/50 font-mono text-sm text-slate-800 dark:text-slate-200 whitespace-pre-line">

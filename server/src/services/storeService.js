@@ -249,3 +249,4 @@ export const HistoryService = {
     return store.histories.length < initialLen;
   },
 };
+

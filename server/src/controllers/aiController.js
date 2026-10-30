@@ -84,6 +84,7 @@ export const simplify = async (req, res, next) => {
 export const describeImage = async (req, res, next) => {
   try {
     const userId = req.user._id || req.user.id;
+    const profile = await ProfileService.findByUserId(userId);
 
     if (!req.file) {
       return res.status(400).json({
@@ -92,9 +93,12 @@ export const describeImage = async (req, res, next) => {
       });
     }
 
+    const language = req.body.language || profile.preferredLanguage || 'English';
+
     const aiResult = await geminiService.describeImage({
       buffer: req.file.buffer,
       mimeType: req.file.mimetype,
+      language,
     });
 
     // Save to user history
@@ -108,12 +112,14 @@ export const describeImage = async (req, res, next) => {
         mimeType: req.file.mimetype,
       },
       outputData: aiResult,
+      language,
     });
 
     res.json({
       success: true,
       result: aiResult,
       historyId: historyRecord._id || historyRecord.id,
+      language,
     });
   } catch (error) {
     next(error);
@@ -191,3 +197,4 @@ export const generateLectureNotes = async (req, res, next) => {
     next(error);
   }
 };
+

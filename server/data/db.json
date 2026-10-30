@@ -23,6 +23,14 @@
       "password": "$2a$10$BuNIpubBZZbX1bEKXXXv5.HEtXxpHFerHrCMdJUqkneTkqH6v3P16",
       "createdAt": "2026-10-30T08:38:34.793Z",
       "updatedAt": "2026-10-30T08:38:34.794Z"
+    },
+    {
+      "_id": "ixrstbkwmvuqezdc",
+      "name": "Srikanth J",
+      "email": "jsrikanth032007@gmail.com",
+      "password": "$2a$10$p2bIHGnaIMefIWMChT8lV..B8vJapZSTc7ISAMFOyvum.ZWKatUQq",
+      "createdAt": "2026-10-30T08:50:16.848Z",
+      "updatedAt": "2026-10-30T08:50:16.848Z"
     }
   ],
   "profiles": [
@@ -76,9 +84,752 @@
       "autoReadAloud": true,
       "createdAt": "2026-10-30T08:38:34.796Z",
       "updatedAt": "2026-10-30T08:38:34.884Z"
+    },
+    {
+      "_id": "algg0bt8mvuqezde",
+      "userId": "ixrstbkwmvuqezdc",
+      "disabilityTypes": [
+        "visual"
+      ],
+      "preferredLanguage": "Tamil",
+      "readingLevel": "Simple",
+      "fontSize": "xlarge",
+      "dyslexiaFont": false,
+      "highContrast": false,
+      "reducedMotion": false,
+      "autoReadAloud": true,
+      "createdAt": "2026-10-30T08:50:16.850Z",
+      "updatedAt": "2026-10-30T09:27:50.154Z"
     }
   ],
   "histories": [
+    {
+      "_id": "sgs341vvmvurjxqg",
+      "userId": "ixrstbkwmvuqezdc",
+      "featureType": "lecture-notes",
+      "title": "The Complete Hostel Balanced Diet Chart (With Night Milk)",
+      "inputData": {
+        "transcriptSnippet": "📅 The Complete Hostel Balanced Diet Chart (With Night Milk)\r\nDay\tMorning Breakfast (Probiotics & Protein)\tAfternoon Lunch (Carbs & Fats)\tEvening Snack (Plant Protein)\tNight Dinner & Bedtime (Recovery & Growth)\r\nMonday\tFermented Rice + Shop Curd (₹12)\tMess Meals + Buttermilk + Handful Peanuts (₹20)\t"
+      },
+      "outputData": {
+        "title": "The Complete Hostel Balanced Diet Chart (With Night Milk)",
+        "summary": "This diet chart provides a balanced meal plan for hostel students, structured across seven days of the week. Each day is organized into four main meal categories with specific nutritional focuses:\n\n*   **Morning Breakfast (Probiotics & Protein):** Typically includes Fermented Rice and Shop Curd, often costing around ₹12.\n*   **Afternoon Lunch (Carbs & Fats):** Consists of standard Mess Meals, Buttermilk, and a handful of Peanuts, with an approximate cost of ₹20.\n*   **Evening Snack (Plant Protein):** A consistent offering of a handful of Pottukadalai is provided daily.\n*   **Night Dinner & Bedtime (Recovery & Growth):** Dinners vary each night, featuring options such as Gobi Rice, Soya Fried Rice, Chicken Night, Rice & Sambar, and Soya Chunks Biryani. Most dinners include 2 Kettle-Boiled Eggs or a Mess Egg, and a Banana is included on Monday.\n*   **Night Milk** is a crucial and consistent component consumed every night to aid in recovery and growth.\n*   **Sunday's schedule** offers some flexibility, allowing for sleeping in or a light mess breakfast, and a 'Rest' option for the evening snack if the student is full.",
+        "keyTerms": [
+          {
+            "term": "Fermented Rice",
+            "explanation": "Rice that has been soaked and fermented, often consumed for its probiotic benefits and ease of digestion."
+          },
+          {
+            "term": "Shop Curd",
+            "explanation": "Yogurt or dahi purchased from a store, serving as a convenient source of probiotics and protein."
+          },
+          {
+            "term": "Mess Meals",
+            "explanation": "Standard meals provided by a hostel or institutional dining facility, typically offering a staple diet."
+          },
+          {
+            "term": "Buttermilk",
+            "explanation": "A fermented dairy drink, often consumed for hydration, digestive health, and its cooling properties."
+          },
+          {
+            "term": "Pottukadalai",
+            "explanation": "Roasted gram or split roasted chickpeas, a common and inexpensive source of plant protein in Indian snacks."
+          },
+          {
+            "term": "Soya Chunks",
+            "explanation": "Textured vegetable protein made from defatted soy flour, widely used as a high-protein meat substitute."
+          },
+          {
+            "term": "Night Milk",
+            "explanation": "Milk consumed before bedtime, believed to aid in recovery, provide essential nutrients, and potentially promote sleep."
+          },
+          {
+            "term": "Probiotics",
+            "explanation": "Live microorganisms that, when consumed in adequate amounts, confer a health benefit on the host, often found in fermented foods."
+          },
+          {
+            "term": "Carbs (Carbohydrates)",
+            "explanation": "Macronutrients that are the body's primary source of energy, essential for daily activities and brain function."
+          },
+          {
+            "term": "Fats",
+            "explanation": "Macronutrients vital for energy storage, hormone production, absorption of fat-soluble vitamins, and protecting organs."
+          },
+          {
+            "term": "Plant Protein",
+            "explanation": "Protein derived from plant sources such as legumes, grains, nuts, and seeds, important for muscle repair and growth."
+          },
+          {
+            "term": "Recovery & Growth",
+            "explanation": "Refers to the body's processes of repairing tissues, building muscle, and replenishing energy stores, particularly important after physical activity or during sleep."
+          }
+        ],
+        "quiz": [
+          {
+            "question": "What is a consistent component of the 'Night Dinner & Bedtime' meal throughout the week?",
+            "options": [
+              "Mess Chicken Night",
+              "2 Kettle-Boiled Eggs",
+              "Night Milk",
+              "Banana"
+            ],
+            "correctAnswer": "Night Milk",
+            "explanation": "The diet chart explicitly lists 'Night Milk' for every single night's entry, indicating its consistent inclusion across the week for recovery and growth."
+          },
+          {
+            "question": "Which of the following is typically served for 'Morning Breakfast' according to the diet chart?",
+            "options": [
+              "Mess Meals + Buttermilk",
+              "Fermented Rice + Shop Curd",
+              "Handful Pottukadalai",
+              "Kettle Egg-Oats"
+            ],
+            "correctAnswer": "Fermented Rice + Shop Curd",
+            "explanation": "The 'Morning Breakfast' column consistently specifies 'Fermented Rice + Shop Curd' for Monday through Saturday, highlighting its role as a probiotic and protein source."
+          },
+          {
+            "question": "What is the primary nutritional focus for the 'Evening Snack' according to the diet chart?",
+            "options": [
+              "Probiotics & Protein",
+              "Carbs & Fats",
+              "Plant Protein",
+              "Recovery & Growth"
+            ],
+            "correctAnswer": "Plant Protein",
+            "explanation": "The column header for 'Evening Snack' explicitly states '(Plant Protein)', and the snack (Pottukadalai) is a direct source of plant-based protein."
+          }
+        ]
+      },
+      "language": "English",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T09:22:07.624Z",
+      "updatedAt": "2026-10-30T09:22:07.624Z"
+    },
+    {
+      "_id": "xxve76ndmvurgaw4",
+      "userId": "ixrstbkwmvuqezdc",
+      "featureType": "simplify",
+      "title": "Hostel Diet.txt",
+      "inputData": {
+        "textSnippet": "📅 The Complete Hostel Balanced Diet Chart (With Night Milk)\r\nDay\tMorning Breakfast (Probiotics & Protein)\tAfternoon Lunch (Carbs & Fats)\tEvening Snack (Plant Protein)\tNight Dinner & Bedtime (Recovery & Growth)\r\nMonday\tFermented Rice + Shop Curd (₹12)\tMess Meals + Buttermilk + Handful Peanuts (₹20)\t",
+        "source": "file"
+      },
+      "outputData": {
+        "plainLanguage": "This is a weekly healthy meal plan made for students living in a hostel. Most mornings, eat leftover rice soaked in water (fermented rice) with store-bought curd to help your digestion. For lunch, eat your hostel mess meals with a glass of buttermilk and a handful of peanuts. In the evening, have a handful of roasted gram (pottukadalai) for quick energy. For dinner, add boiled eggs or soya chunks to your mess food to get enough protein. Drink a glass of warm milk every night before bed to sleep well.",
+        "keyPoints": [
+          "Eat fermented rice and curd in the morning for healthy digestion.",
+          "Add low-cost protein like peanuts, roasted gram, boiled eggs, and soya chunks to your daily meals.",
+          "Drink a warm glass of milk every night to help your body recover while you sleep."
+        ],
+        "actionSteps": [
+          "Buy curd, a pack of peanuts, and roasted gram (pottukadalai) from a nearby grocery shop for your weekly snacks.",
+          "Soak your leftover cooked rice in water overnight to prepare fermented rice for breakfast.",
+          "Use an electric kettle in your room to boil eggs or cook soya chunks to add to your dinner.",
+          "Get fresh milk daily to drink before going to sleep."
+        ],
+        "glossary": [
+          {
+            "term": "Fermented Rice",
+            "definition": "Cooked rice soaked in water overnight (pazhaya sadam) that develops healthy bacteria to improve stomach digestion."
+          },
+          {
+            "term": "Probiotics",
+            "definition": "Good bacteria found in foods like curd that keep your stomach and gut healthy."
+          },
+          {
+            "term": "Pottukadalai",
+            "definition": "Roasted split chickpeas, a crunchy and inexpensive snack packed with healthy plant protein."
+          },
+          {
+            "term": "Soya Chunks",
+            "definition": "Dried chunks made from soybeans that are rich in protein and help build muscle strength."
+          }
+        ],
+        "translation": "இது விடுதியில் தங்கும் மாணவர்களுக்கான ஒரு வாராந்திர ஆரோக்கிய உணவுத் திட்டம். செரிமானத்தை சீராக்க பெரும்பாலான நாட்களில் காலை உணவாகப் பழைய சாதத்துடன் தயிர் சாப்பிடுங்கள். மதிய உணவிற்கு, வழக்கமான மெஸ் சாப்பாட்டுடன் மோர் குடித்து, ஒரு கைப்பிடி வேர்க்கடலை சாப்பிடுங்கள். மாலையில் உடலுக்கு ஆற்றல் கிடைக்கப் பொட்டுக் கடலை சாப்பிடுங்கள். இரவு உணவில் மெஸ் சாப்பாட்டுடன் கூடுதல் புரதத்திற்காக அவித்த முட்டை அல்லது சோயா சங்ஸ் சேர்த்துக் கொள்ளுங்கள். தினமும் இரவு தூங்குவதற்கு முன் ஒரு டம்ளர் வெதுவெதுப்பான பால் குடியுங்கள்."
+      },
+      "language": "Tamil",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T09:19:18.052Z",
+      "updatedAt": "2026-10-30T09:19:18.052Z"
+    },
+    {
+      "_id": "ydsq68lpmvurd1vb",
+      "userId": "ixrstbkwmvuqezdc",
+      "featureType": "simplify",
+      "title": "Hostel Diet.txt",
+      "inputData": {
+        "textSnippet": "📅 The Complete Hostel Balanced Diet Chart (With Night Milk)\r\nDay\tMorning Breakfast (Probiotics & Protein)\tAfternoon Lunch (Carbs & Fats)\tEvening Snack (Plant Protein)\tNight Dinner & Bedtime (Recovery & Growth)\r\nMonday\tFermented Rice + Shop Curd (₹12)\tMess Meals + Buttermilk + Handful Peanuts (₹20)\t",
+        "source": "file"
+      },
+      "outputData": {
+        "plainLanguage": "This is a weekly food plan for people living in a hostel. It tells you what to eat for breakfast, lunch, an evening snack, and dinner every day. You will also have milk before bed each night. The plan tries to give you a healthy and balanced diet. Some meals come from the hostel dining hall (Mess). For other meals, you might buy things from a shop or make them yourself.",
+        "keyPoints": [
+          "This chart shows a full week's meal plan for hostel residents.",
+          "It includes breakfast, lunch, an evening snack, and dinner, plus milk before bed.",
+          "Meals come from the hostel dining hall, shops, or you can make them yourself."
+        ],
+        "actionSteps": [
+          "Follow this meal plan daily to help you eat a balanced diet.",
+          "Remember to drink your milk before bed each night.",
+          "If you have any food allergies or special diet needs, talk to your hostel staff."
+        ],
+        "glossary": [
+          {
+            "term": "Probiotics",
+            "definition": "Good tiny living things that help your stomach and digestion."
+          },
+          {
+            "term": "Protein",
+            "definition": "Food parts that help build and fix your body, like muscles."
+          },
+          {
+            "term": "Carbs (Carbohydrates)",
+            "definition": "Food parts that give you energy to do things."
+          },
+          {
+            "term": "Fats",
+            "definition": "Food parts that give you energy and help your body stay healthy."
+          },
+          {
+            "term": "Fermented Rice",
+            "definition": "Rice that has been soaked and changed a bit, which can be good for your stomach."
+          },
+          {
+            "term": "Shop Curd",
+            "definition": "Yogurt you buy from a store."
+          },
+          {
+            "term": "Mess Meals",
+            "definition": "Food served in the hostel's dining hall."
+          },
+          {
+            "term": "Buttermilk",
+            "definition": "A healthy drink made from milk."
+          },
+          {
+            "term": "Pottukadalai",
+            "definition": "A simple, healthy snack made from roasted lentils."
+          },
+          {
+            "term": "Kettle-Boiled Eggs",
+            "definition": "Eggs cooked by boiling them, often using a water kettle."
+          },
+          {
+            "term": "Soya Chunks",
+            "definition": "Small pieces made from soybeans, full of protein."
+          },
+          {
+            "term": "Hapima Masala",
+            "definition": "A special mix of spices used to add flavor to food."
+          },
+          {
+            "term": "Chicken Night",
+            "definition": "Dinner where chicken is the main dish."
+          },
+          {
+            "term": "Sambar",
+            "definition": "A tasty soup-like dish made with lentils and vegetables."
+          },
+          {
+            "term": "Biryani",
+            "definition": "A flavorful rice dish mixed with spices and meat or vegetables."
+          },
+          {
+            "term": "DIY",
+            "definition": "Means 'Do It Yourself' – you make it yourself."
+          },
+          {
+            "term": "Recovery & Growth",
+            "definition": "When your body fixes itself and gets stronger, especially while you sleep."
+          }
+        ],
+        "translation": "இது விடுதியில் தங்கியிருப்பவர்களுக்கான வாராந்திர உணவுத் திட்டம். காலை உணவு, மதிய உணவு, மாலை சிற்றுண்டி மற்றும் இரவு உணவு என ஒவ்வொரு நாளும் என்ன சாப்பிட வேண்டும் என்று இது உங்களுக்குச் சொல்கிறது. ஒவ்வொரு இரவும் படுக்கைக்கு முன் பால் குடிப்பீர்கள். இந்தத் திட்டம் உங்களுக்கு ஆரோக்கியமான மற்றும் சமச்சீர் உணவை வழங்க முயற்சிக்கிறது. சில உணவுகள் விடுதியின் உணவு விடுதியிலிருந்து (மெஸ்) வரும். மற்ற உணவுகளுக்கு, நீங்கள் கடையில் பொருட்களை வாங்கலாம் அல்லது நீங்களே சமைக்கலாம்."
+      },
+      "language": "Tamil",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T09:16:46.391Z",
+      "updatedAt": "2026-10-30T09:16:46.391Z"
+    },
+    {
+      "_id": "r1wz11jomvurchsh",
+      "userId": "ixrstbkwmvuqezdc",
+      "featureType": "simplify",
+      "title": "Hostel Diet.txt",
+      "inputData": {
+        "textSnippet": "📅 The Complete Hostel Balanced Diet Chart (With Night Milk)\r\nDay\tMorning Breakfast (Probiotics & Protein)\tAfternoon Lunch (Carbs & Fats)\tEvening Snack (Plant Protein)\tNight Dinner & Bedtime (Recovery & Growth)\r\nMonday\tFermented Rice + Shop Curd (₹12)\tMess Meals + Buttermilk + Handful Peanuts (₹20)\t",
+        "source": "file"
+      },
+      "outputData": {
+        "plainLanguage": "This is a suggested meal plan for people living in a hostel. It shows what to eat each day for breakfast, lunch, an evening snack, and dinner. The plan helps you eat a balanced diet with different types of food. It includes milk every night. Some meals are provided by the hostel mess, while others you might buy or make yourself.",
+        "keyPoints": [
+          "This is a weekly meal plan for hostel residents.",
+          "It suggests balanced meals with different food types for morning, afternoon, evening, and night.",
+          "Drinking milk at bedtime is part of the daily plan."
+        ],
+        "actionSteps": [
+          "Look at this meal plan each day to help you choose healthy food.",
+          "Try to follow the suggested meals for breakfast, lunch, snack, and dinner.",
+          "Remember to drink milk before bed every night for recovery and growth.",
+          "If you need to buy items like curd or peanuts, make sure you have them ready."
+        ],
+        "glossary": [
+          {
+            "term": "Probiotics",
+            "definition": "Good tiny living things that help your stomach and digestion."
+          },
+          {
+            "term": "Protein",
+            "definition": "Food that helps build and repair your body, like muscles."
+          },
+          {
+            "term": "Carbs (Carbohydrates)",
+            "definition": "Food that gives your body energy."
+          },
+          {
+            "term": "Fats",
+            "definition": "Food that gives you energy and helps your body stay healthy."
+          },
+          {
+            "term": "Recovery & Growth",
+            "definition": "When your body gets stronger and grows, especially after being active."
+          },
+          {
+            "term": "Pottukadalai",
+            "definition": "A simple, roasted snack made from split chickpeas."
+          },
+          {
+            "term": "Soya Chunks",
+            "definition": "Small, dry pieces made from soybeans, full of protein."
+          },
+          {
+            "term": "Hapima Masala",
+            "definition": "A special mix of spices used to make food taste better."
+          },
+          {
+            "term": "Buttermilk",
+            "definition": "A thin, refreshing drink made from yogurt, often salty."
+          },
+          {
+            "term": "Fermented Rice",
+            "definition": "Rice that has been soaked and allowed to change, often eaten for breakfast."
+          },
+          {
+            "term": "Mess Meals",
+            "definition": "Food served in the hostel's dining hall."
+          },
+          {
+            "term": "Kettle-Boiled Eggs",
+            "definition": "Eggs cooked using hot water from an electric kettle."
+          },
+          {
+            "term": "DIY",
+            "definition": "(Do It Yourself) Means you make or prepare something yourself, not buying it ready-made."
+          }
+        ],
+        "translation": "இது விடுதியில் தங்கும் மாணவர்களுக்கான உணவுத் திட்டம். காலை உணவு, மதிய உணவு, மாலை சிற்றுண்டி மற்றும் இரவு உணவு என ஒவ்வொரு நாளும் என்ன சாப்பிட வேண்டும் என்பதைக் காட்டுகிறது. இந்தத் திட்டம் உங்களுக்கு சமச்சீர் உணவை உண்ண உதவுகிறது. இதில் ஒவ்வொரு இரவும் பால் அடங்கும். சில உணவுகள் விடுதி மெஸ்ஸால் வழங்கப்படுகின்றன, மற்றவற்றை நீங்கள் வாங்கலாம் அல்லது நீங்களே செய்யலாம்."
+      },
+      "language": "Tamil",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T09:16:20.369Z",
+      "updatedAt": "2026-10-30T09:16:20.369Z"
+    },
+    {
+      "_id": "1gq2mo4imvurash6",
+      "userId": "ixrstbkwmvuqezdc",
+      "featureType": "simplify",
+      "title": "Hostel Diet.txt",
+      "inputData": {
+        "textSnippet": "📅 The Complete Hostel Balanced Diet Chart (With Night Milk)\r\nDay\tMorning Breakfast (Probiotics & Protein)\tAfternoon Lunch (Carbs & Fats)\tEvening Snack (Plant Protein)\tNight Dinner & Bedtime (Recovery & Growth)\r\nMonday\tFermented Rice + Shop Curd (₹12)\tMess Meals + Buttermilk + Handful Peanuts (₹20)\t",
+        "source": "file"
+      },
+      "outputData": {
+        "plainLanguage": "This is a simple meal plan for people living in a hostel. It shows you what to eat each day. You will see meals for breakfast, lunch, an evening snack, and dinner. This plan helps you eat healthy food. Most mornings, you eat fermented rice and curd. For lunch, you usually get hostel meals with buttermilk and peanuts. In the evening, you can have roasted gram. Dinner often includes a main dish, sometimes with eggs or soya chunks, and milk before you sleep. On Sundays, you can have a lighter breakfast and chicken for lunch.",
+        "keyPoints": [
+          "This plan shows what to eat for breakfast, lunch, snack, and dinner every day in a hostel.",
+          "It helps you eat a balanced diet with different types of food.",
+          "Common foods include fermented rice, hostel meals, eggs, soya, and milk before bed."
+        ],
+        "actionSteps": [
+          "Try to follow this meal plan to eat healthy each day.",
+          "If you have food allergies or special diet needs, talk to your hostel staff.",
+          "You can ask the hostel kitchen staff if you have questions about the meals."
+        ],
+        "glossary": [
+          {
+            "term": "Fermented Rice",
+            "definition": "Rice that has been soaked in water for a long time, which can make it easier to digest."
+          },
+          {
+            "term": "Probiotics",
+            "definition": "Good bacteria found in some foods like curd, which help your stomach stay healthy."
+          },
+          {
+            "term": "Protein",
+            "definition": "A nutrient that helps your body build and repair muscles. Found in eggs, soya, and chicken."
+          },
+          {
+            "term": "Carbs (Carbohydrates)",
+            "definition": "A nutrient that gives your body energy. Found in rice and other grains."
+          },
+          {
+            "term": "Fats",
+            "definition": "A nutrient that gives your body energy and helps it absorb vitamins. Found in peanuts and some oils."
+          },
+          {
+            "term": "Pottukadalai",
+            "definition": "Roasted gram, a type of lentil often eaten as a snack."
+          },
+          {
+            "term": "Mess Meals",
+            "definition": "The standard food served in a hostel's dining hall."
+          },
+          {
+            "term": "Kettle-Boiled Eggs",
+            "definition": "Eggs cooked by boiling them in hot water, often using an electric kettle."
+          },
+          {
+            "term": "DIY Soya Fried Rice",
+            "definition": "Fried rice you make yourself using hostel rice, soya chunks, and spices."
+          },
+          {
+            "term": "Hapima Masala",
+            "definition": "A type of spice mix used to add flavor to food."
+          },
+          {
+            "term": "Night Milk",
+            "definition": "Milk drunk before going to bed."
+          },
+          {
+            "term": "Recovery & Growth",
+            "definition": "Refers to foods that help your body heal and grow, especially after a day's activities."
+          }
+        ],
+        "translation": "This is a simple meal plan for people living in a hostel. It shows you what to eat each day. You will see meals for breakfast, lunch, an evening snack, and dinner. This plan helps you eat healthy food. Most mornings, you eat fermented rice and curd. For lunch, you usually get hostel meals with buttermilk and peanuts. In the evening, you can have roasted gram. Dinner often includes a main dish, sometimes with eggs or soya chunks, and milk before you sleep. On Sundays, you can have a lighter breakfast and chicken for lunch."
+      },
+      "language": "English",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T09:15:00.906Z",
+      "updatedAt": "2026-10-30T09:15:00.906Z"
+    },
+    {
+      "_id": "xiz9fkbpmvur9vum",
+      "userId": "ixrstbkwmvuqezdc",
+      "featureType": "simplify",
+      "title": "https://www.amazon.in/Campus-OXYFIT-Walking-Shoes-10-UK/dp/B09RP56NG5/ref=sr_1_1?_encoding=UTF8&rps=1&s=shoes&sr=1-1",
+      "inputData": {
+        "textSnippet": "Sponsored \n\n Shoes & Handbags›Shoes›Men's Shoes›Sports & Outdoor Shoes›Walking Shoes \n\n Image Unavailable Image not available forColour: \n\n Visit the Campus Store \n\n Campus Men Oxyfit (N) Walking Shoes \n\n 4.1 4.1 out of 5 stars \n\n (28,192) \n\n #1 Best Seller \n in Men's Walking Shoes \n\n 800+ bought in",
+        "source": "url"
+      },
+      "outputData": {
+        "plainLanguage": "These are Campus Oxyfit (N) Walking Shoes for men. They are very popular and a top seller.\nThe shoes cost 649 rupees. This is 35% less than the original price of 999 rupees. All taxes are included in this price.\nYou get free delivery. You can also choose to pay with cash or card when the shoes are delivered to your home.\nYou have 10 days to return or exchange the shoes if you are not happy or if the size is wrong. The shoes also come with a 30-day warranty.\nThese shoes are easy to put on because they slip on; you do not need to tie laces. The top part is made of mesh, which helps your feet stay cool. The sole is made of soft \"Pillo Foam\" for comfort and to absorb shock. Inside, there is \"Memory Foam\" that molds to the shape of your foot for a custom fit.\nYou can wear these shoes for many activities, such as going to college, work, or casual outings. They are not waterproof.\nTo clean them, wipe with a damp cloth. For a deeper clean, use mild soap and water.\nSome customers recommend ordering one size larger than your usual size because the shoes tend to run small.",
+        "keyPoints": [
+          "Campus Men's Oxyfit (N) Walking Shoes are a top seller, priced at ₹649.00 (35% off the original ₹999.00).",
+          "These slip-on shoes feature breathable mesh, a soft Pillo Foam sole, and a Memory Foam insole for comfort and versatility.",
+          "You get free delivery, a 10-day return/exchange policy, and a 30-day warranty, but many customers suggest buying one size larger."
+        ],
+        "actionSteps": [
+          "Choose your preferred size and color from the available options.",
+          "Check for special bank offers (like HDFC or Amazon Pay ICICI Bank cards) to see if you can get extra discounts or cashback.",
+          "Consider ordering one size larger than your usual shoe size, as many customers report these shoes run small.",
+          "Add the shoes to your cart or select 'Buy Now' to complete your purchase.",
+          "If you need to return or exchange, keep the shoes in their original condition, packaging, and with the MRP tag for 10 days after delivery."
+        ],
+        "glossary": [
+          {
+            "term": "M.R.P.",
+            "definition": "This stands for 'Maximum Retail Price.' It is the highest price a product can be sold for in India."
+          },
+          {
+            "term": "Inclusive of all taxes",
+            "definition": "This means the price you see already includes all government taxes, so you will not pay extra."
+          },
+          {
+            "term": "Cashback",
+            "definition": "This is money you get back after buying something, often as a reward for using a specific payment method."
+          },
+          {
+            "term": "Warranty",
+            "definition": "This is a promise from the seller or maker that they will fix or replace the product if it breaks within a certain time."
+          },
+          {
+            "term": "Encrypts",
+            "definition": "This means to change information into a secret code to keep it safe and private, especially when sending it over the internet."
+          },
+          {
+            "term": "Transmission",
+            "definition": "This is the process of sending or passing something, like information, from one place to another."
+          },
+          {
+            "term": "Memory Foam",
+            "definition": "This is a soft material that changes shape to fit your body or foot, then slowly returns to its original shape. It offers personalized comfort."
+          },
+          {
+            "term": "Mesh",
+            "definition": "This is a fabric with many small holes, like a net. It helps air move through, keeping your feet cool."
+          },
+          {
+            "term": "Pillo Foam sole",
+            "definition": "This is a soft, cushioned material used in the bottom part of the shoe to make walking more comfortable and absorb shock."
+          },
+          {
+            "term": "Slip-on shoes",
+            "definition": "These are shoes that you can put on and take off easily without needing to tie laces or fasten straps."
+          },
+          {
+            "term": "GST invoice",
+            "definition": "A special bill for businesses that helps them save money on taxes."
+          },
+          {
+            "term": "Secure transaction",
+            "definition": "This means your payment and personal information are kept safe and private when you buy something online."
+          }
+        ],
+        "translation": "These are Campus Oxyfit (N) Walking Shoes for men. They are very popular and a top seller.\nThe shoes cost six hundred forty-nine rupees. This is thirty-five percent less than the original price of nine hundred ninety-nine rupees. All taxes are included in this price.\nYou get free delivery. You can also choose to pay with cash or card when the shoes are delivered to your home.\nYou have ten days to return or exchange the shoes if you are not happy or if the size is wrong. The shoes also come with a thirty-day warranty.\nThese shoes are easy to put on because they slip on; you do not need to tie laces. The top part is made of mesh, which helps your feet stay cool. The sole is made of soft \"Pillo Foam\" for comfort and to absorb shock. Inside, there is \"Memory Foam\" that molds to the shape of your foot for a custom fit.\nYou can wear these shoes for many activities, such as going to college, work, or casual outings. They are not waterproof.\nTo clean them, wipe with a damp cloth. For a deeper clean, use mild soap and water.\nSome customers recommend ordering one size larger than your usual size because the shoes tend to run small."
+      },
+      "language": "English",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T09:14:18.622Z",
+      "updatedAt": "2026-10-30T09:14:18.622Z"
+    },
+    {
+      "_id": "5y9pwdyrmvur3fds",
+      "userId": "ixrstbkwmvuqezdc",
+      "featureType": "describe-image",
+      "title": "Horseeee.jpg",
+      "inputData": {
+        "fileName": "Horseeee.jpg",
+        "fileSize": 52059,
+        "mimeType": "image/jpeg"
+      },
+      "outputData": {
+        "altText": "A majestic black horse with a flowing mane stands in a grassy field under a cloudy sky, with an eagle flying overhead.",
+        "detailedDescription": "A striking black and white photograph captures a powerful black horse standing in a field of tall grass under a dramatic sky, with a large bird in flight. The horse, likely a Friesian due to its distinctive features, is the central subject, positioned slightly to the right of the frame's vertical center. Its head is turned slightly to the left, and its long, wavy mane flows dynamically to the right, suggesting movement or wind. A small white marking is visible on its forehead. The horse's muscular body is well-defined by the soft, diffused lighting. In the upper left quadrant of the image, a large bird, possibly an eagle or hawk, soars with its wings spread, adding a sense of wildness and freedom to the scene. The background consists of a vast expanse of tall, swaying grass that fills the lower half of the image, extending into the mid-ground. Above the horizon, a heavily clouded sky dominates the upper two-thirds of the frame, rendered in various shades of gray, from light near the horizon to darker, more ominous tones higher up. The monochromatic palette enhances the dramatic and timeless quality of the scene, emphasizing textures and forms.",
+        "detectedText": "No text detected in image."
+      },
+      "language": "English",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T09:09:17.344Z",
+      "updatedAt": "2026-10-30T09:09:17.344Z"
+    },
+    {
+      "_id": "x40o21bvmvur1t22",
+      "userId": "3akd9sqtmvuohgpy",
+      "featureType": "describe-image",
+      "title": "test.png",
+      "inputData": {
+        "fileName": "test.png",
+        "fileSize": 68,
+        "mimeType": "image/png"
+      },
+      "outputData": {
+        "altText": "A completely black image with no discernible content.",
+        "detailedDescription": "The image is entirely black, presenting a uniform, featureless void. There are no discernible subjects, objects, or details within the frame. The composition is monochromatic, dominated by the absence of light and color. There is no visible lighting, as the image appears to be a solid block of black, suggesting either extreme underexposure, a closed lens cap, or an intentionally blank canvas. Consequently, there are no emotions conveyed, nor any background or spatial arrangement to describe. The image is a pure, unadulterated black rectangle.",
+        "detectedText": "No text detected in image."
+      },
+      "language": "English",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T09:08:01.754Z",
+      "updatedAt": "2026-10-30T09:08:01.754Z"
+    },
+    {
+      "_id": "pquuriatmvur13j2",
+      "userId": "3akd9sqtmvuohgpy",
+      "featureType": "lecture-notes",
+      "title": "Introduction to Sound Waves",
+      "inputData": {
+        "transcriptSnippet": "Today we discuss sound waves. Sound is a longitudinal mechanical wave that travels through matter by compressing and decompressing particles."
+      },
+      "outputData": {
+        "title": "Introduction to Sound Waves",
+        "summary": "This lecture introduces the basic properties of sound waves:\n*   Sound is a specific type of wave known as a \"longitudinal mechanical wave.\"\n*   As a mechanical wave, sound requires a medium (matter) to travel through; it cannot travel in a vacuum.\n*   Sound travels through matter by causing particles to move closer together (compressing) and then spread apart (decompressing).",
+        "keyTerms": [
+          {
+            "term": "Longitudinal Wave",
+            "explanation": "A type of wave where the particles of the medium vibrate back and forth in the same direction that the wave is traveling."
+          },
+          {
+            "term": "Mechanical Wave",
+            "explanation": "A wave that requires a medium (matter) to travel through. It cannot travel in empty space."
+          },
+          {
+            "term": "Compressing",
+            "explanation": "The action of pushing particles in a material closer together, increasing their density."
+          },
+          {
+            "term": "Decompressing",
+            "explanation": "The action of allowing particles in a material to spread further apart, decreasing their density."
+          }
+        ],
+        "quiz": [
+          {
+            "question": "According to the lecture, what type of wave is sound?",
+            "options": [
+              "A. Transverse electromagnetic wave",
+              "B. Longitudinal mechanical wave",
+              "C. Surface light wave",
+              "D. Static electrical wave"
+            ],
+            "correctAnswer": "B. Longitudinal mechanical wave",
+            "explanation": "The lecture explicitly states, 'Sound is a longitudinal mechanical wave.'"
+          },
+          {
+            "question": "How does sound travel through matter?",
+            "options": [
+              "A. By emitting light",
+              "B. By creating a vacuum",
+              "C. By compressing and decompressing particles",
+              "D. By generating heat"
+            ],
+            "correctAnswer": "C. By compressing and decompressing particles",
+            "explanation": "The lecture explains that sound 'travels through matter by compressing and decompressing particles.'"
+          },
+          {
+            "question": "What does it mean for sound to be a 'mechanical wave'?",
+            "options": [
+              "A. It can travel through empty space.",
+              "B. It requires a medium (matter) to travel.",
+              "C. It is powered by machines.",
+              "D. It only travels in one direction."
+            ],
+            "correctAnswer": "B. It requires a medium (matter) to travel.",
+            "explanation": "A mechanical wave, like sound, needs matter (a medium) to move through. The lecture states it 'travels through matter.'"
+          }
+        ]
+      },
+      "language": "English",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T09:07:28.670Z",
+      "updatedAt": "2026-10-30T09:07:28.670Z"
+    },
+    {
+      "_id": "dv6a45y5mvur0n18",
+      "userId": "3akd9sqtmvuohgpy",
+      "featureType": "simplify",
+      "title": "The aforementioned indemnification claus...",
+      "inputData": {
+        "textSnippet": "The aforementioned indemnification clause shall hold harmless the lessor against any and all liabilities, torts, or damages incurred pursuant to lease execution.",
+        "source": "text"
+      },
+      "outputData": {
+        "plainLanguage": "The landlord will not be held responsible for any problems, harm, or costs that happen because of this lease agreement.",
+        "keyPoints": [
+          "The landlord is protected.",
+          "They won't be blamed for problems or costs.",
+          "This protection applies to things that happen because of the lease."
+        ],
+        "actionSteps": [
+          "Read your full lease carefully to understand all its parts.",
+          "If you don't understand any part of your lease, ask your landlord or a legal advisor for help before signing."
+        ],
+        "glossary": [
+          {
+            "term": "indemnification clause",
+            "definition": "A part of a contract that protects one person from being blamed or paying for certain problems."
+          },
+          {
+            "term": "lessor",
+            "definition": "The landlord (the person who rents out property)."
+          },
+          {
+            "term": "liabilities",
+            "definition": "Being legally responsible for problems or debts."
+          },
+          {
+            "term": "torts",
+            "definition": "Harm or injury caused by someone else's mistake or action."
+          },
+          {
+            "term": "lease execution",
+            "definition": "When a rental agreement (lease) is officially signed and starts."
+          }
+        ],
+        "translation": "The landlord is protected. They won't be blamed for problems. Or for harm. Or for costs. If these things happen because of the lease you signed."
+      },
+      "language": "English",
+      "readingLevel": "Very Simple",
+      "createdAt": "2026-10-30T09:07:07.292Z",
+      "updatedAt": "2026-10-30T09:07:07.292Z"
+    },
+    {
+      "_id": "1knl0q5emvuqnnk2",
+      "userId": "ixrstbkwmvuqezdc",
+      "featureType": "describe-image",
+      "title": "Horseeee.jpg",
+      "inputData": {
+        "fileName": "Horseeee.jpg",
+        "fileSize": 52059,
+        "mimeType": "image/jpeg"
+      },
+      "outputData": {
+        "altText": "An uploaded visual image processed by AccessBridge assistive vision.",
+        "detailedDescription": "The image has been uploaded to AccessBridge. To enable live detailed computer vision descriptions and visual scene interpretation, configure a valid GEMINI_API_KEY in server/.env.",
+        "detectedText": "Please provide a valid GEMINI_API_KEY for live visual optical text recognition."
+      },
+      "language": "English",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T08:57:01.442Z",
+      "updatedAt": "2026-10-30T08:57:01.442Z"
+    },
+    {
+      "_id": "z4qxt34nmvuqlnu8",
+      "userId": "ixrstbkwmvuqezdc",
+      "featureType": "describe-image",
+      "title": "Horseeee.jpg",
+      "inputData": {
+        "fileName": "Horseeee.jpg",
+        "fileSize": 52059,
+        "mimeType": "image/jpeg"
+      },
+      "outputData": {
+        "altText": "An uploaded visual image processed by AccessBridge assistive vision.",
+        "detailedDescription": "The image has been uploaded to AccessBridge. To enable live detailed computer vision descriptions and visual scene interpretation, configure a valid GEMINI_API_KEY in server/.env.",
+        "detectedText": "Please provide a valid GEMINI_API_KEY for live visual optical text recognition."
+      },
+      "language": "English",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T08:55:28.496Z",
+      "updatedAt": "2026-10-30T08:55:28.496Z"
+    },
+    {
+      "_id": "yj0ppgtfmvuqie7a",
+      "userId": "ixrstbkwmvuqezdc",
+      "featureType": "describe-image",
+      "title": "Horseeee.jpg",
+      "inputData": {
+        "fileName": "Horseeee.jpg",
+        "fileSize": 52059,
+        "mimeType": "image/jpeg"
+      },
+      "outputData": {
+        "altText": "An uploaded visual image processed by AccessBridge assistive vision.",
+        "detailedDescription": "The image has been uploaded to AccessBridge. To enable live detailed computer vision descriptions and visual scene interpretation, configure a valid GEMINI_API_KEY in server/.env.",
+        "detectedText": "Please provide a valid GEMINI_API_KEY for live visual optical text recognition."
+      },
+      "language": "English",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T08:52:56.038Z",
+      "updatedAt": "2026-10-30T08:52:56.038Z"
+    },
+    {
+      "_id": "hu7u35qimvuqia97",
+      "userId": "ixrstbkwmvuqezdc",
+      "featureType": "describe-image",
+      "title": "Horseeee.jpg",
+      "inputData": {
+        "fileName": "Horseeee.jpg",
+        "fileSize": 52059,
+        "mimeType": "image/jpeg"
+      },
+      "outputData": {
+        "altText": "An uploaded visual image processed by AccessBridge assistive vision.",
+        "detailedDescription": "The image has been uploaded to AccessBridge. To enable live detailed computer vision descriptions and visual scene interpretation, configure a valid GEMINI_API_KEY in server/.env.",
+        "detectedText": "Please provide a valid GEMINI_API_KEY for live visual optical text recognition."
+      },
+      "language": "English",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T08:52:50.923Z",
+      "updatedAt": "2026-10-30T08:52:50.923Z"
+    },
     {
       "_id": "4y7ppv3omvupzxz5",
       "userId": "3akd9sqtmvuohgpy",

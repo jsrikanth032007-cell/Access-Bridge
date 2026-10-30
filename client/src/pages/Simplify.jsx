@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAccessibility } from '../context/AccessibilityContext.jsx';
+import { useSpeech } from '../hooks/useSpeech.js';
+import { useTTS } from '../hooks/useTTS.js';
 import api from '../services/api.js';
 import {
   FileText,
@@ -16,15 +18,24 @@ import {
   Copy,
   Check,
   Volume2,
+  Mic,
 } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner.jsx';
-import { TTSButton } from '../components/SpeechControls.jsx';
+import { TTSButton, MicInputButton } from '../components/SpeechControls.jsx';
 
-const LANGUAGES = ['English', 'Tamil', 'Hindi', 'Telugu', 'Malayalam', 'Kannada'];
+const LANGUAGES = [
+  { id: 'English', label: 'English', native: 'English' },
+  { id: 'Tamil', label: 'Tamil', native: 'தமிழ்' },
+  { id: 'Hindi', label: 'Hindi', native: 'हिन्दी' },
+  { id: 'Telugu', label: 'Telugu', native: 'తెలుగు' },
+  { id: 'Malayalam', label: 'Malayalam', native: 'മലയാളം' },
+  { id: 'Kannada', label: 'Kannada', native: 'ಕನ್ನಡ' },
+];
 const READING_LEVELS = ['Simple', 'Very Simple', 'Original'];
 
 export default function Simplify() {
   const { settings } = useAccessibility();
+  const { speak } = useTTS();
   const navigate = useNavigate();
 
   // Input tabs: 'text' | 'file' | 'url'
@@ -41,6 +52,27 @@ export default function Simplify() {
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
   const [copiedKey, setCopiedKey] = useState('');
+
+  // Voice speech dictation hook for text input
+  const {
+    isListening,
+    transcript,
+    error: speechError,
+    isSupported: isSpeechSupported,
+    startListening,
+    stopListening,
+    resetTranscript,
+    changeLanguage,
+  } = useSpeech({
+    language,
+    onResult: (text) => {
+      setInputText((prev) => (prev ? `${prev} ${text}` : text));
+    },
+  });
+
+  useEffect(() => {
+    changeLanguage(language);
+  }, [language, changeLanguage]);
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -93,11 +125,9 @@ export default function Simplify() {
       if (res.data.success) {
         setResult(res.data.result);
 
-        // Auto read aloud if enabled in user profile
-        if (settings.autoReadAloud && window.speechSynthesis) {
-          const utterance = new SpeechSynthesisUtterance(res.data.result.plainLanguage);
-          utterance.rate = 0.95;
-          window.speechSynthesis.speak(utterance);
+        // Auto read aloud if enabled in user profile or blind accessibility mode
+        if (settings.autoReadAloud || settings.blindAccessibilityMode) {
+          speak(res.data.result.plainLanguage, language);
         }
       }
     } catch (err) {
@@ -215,18 +245,30 @@ export default function Simplify() {
           {/* Tab 1: Paste Text */}
           {activeTab === 'text' && (
             <div>
-              <label
-                htmlFor="input-text"
-                className="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-2"
-              >
-                Paste your complex text, medical bill, or legal document here:
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label
+                  htmlFor="input-text"
+                  className="block text-sm font-semibold text-slate-800 dark:text-slate-200"
+                >
+                  Paste complex text or speak with microphone:
+                </label>
+                <MicInputButton
+                  isListening={isListening}
+                  onStart={startListening}
+                  onStop={stopListening}
+                  isSupported={isSpeechSupported}
+                />
+              </div>
               <textarea
                 id="input-text"
                 rows="6"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                placeholder="e.g. In accordance with Section 4(b), the tenant shall indemnify and hold harmless the landlord against any claims, losses, or liabilities resulting from accidental water damage..."
+                placeholder={
+                  isListening
+                    ? `Listening in ${language}... speak clearly`
+                    : "e.g. In accordance with Section 4(b), the tenant shall indemnify and hold harmless the landlord against any claims, losses, or liabilities resulting from accidental water damage..."
+                }
                 className="w-full p-4 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 text-base"
               />
             </div>
@@ -321,11 +363,11 @@ export default function Simplify() {
                 id="simplify-language"
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
-                className="w-full p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm"
+                className="w-full p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-semibold"
               >
                 {LANGUAGES.map((lang) => (
-                  <option key={lang} value={lang}>
-                    {lang}
+                  <option key={lang.id} value={lang.id}>
+                    {lang.native} ({lang.label})
                   </option>
                 ))}
               </select>
@@ -505,3 +547,4 @@ export default function Simplify() {
     </main>
   );
 }
+

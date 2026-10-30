@@ -6,6 +6,8 @@ import { AccessibilityProvider } from './context/AccessibilityContext.jsx';
 // Components
 import SkipLink from './components/SkipLink.jsx';
 import AccessibilityToolbar from './components/AccessibilityToolbar.jsx';
+import AccessibilityApprovalModal from './components/AccessibilityApprovalModal.jsx';
+import PageAudioAnnouncer from './components/PageAudioAnnouncer.jsx';
 import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
@@ -32,6 +34,12 @@ export default function App() {
 
           {/* Quick Accessibility Customization Toolbar */}
           <AccessibilityToolbar />
+
+          {/* Device Accessibility Audio Approval Modal for Blind / Speech Assistance */}
+          <AccessibilityApprovalModal />
+
+          {/* Automated Spoken Page Introduction for Blind Users */}
+          <PageAudioAnnouncer />
 
           {/* Semantic Main Navbar */}
           <Navbar />

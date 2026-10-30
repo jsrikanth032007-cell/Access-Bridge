@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useAccessibility } from '../context/AccessibilityContext.jsx';
+import React from 'react';
+import { useAccessibility, ACCESSIBLE_GREETINGS } from '../context/AccessibilityContext.jsx';
 import {
   Type,
   SunMoon,
@@ -8,11 +8,20 @@ import {
   Languages,
   BookOpen,
   Settings2,
-  ChevronDown,
   RotateCcw,
+  Sparkles,
+  Eye,
 } from 'lucide-react';
 
-const LANGUAGES = ['English', 'Tamil', 'Hindi', 'Telugu', 'Malayalam', 'Kannada'];
+const LANGUAGES = [
+  { id: 'English', label: 'English', native: 'English' },
+  { id: 'Tamil', label: 'Tamil', native: 'தமிழ்' },
+  { id: 'Hindi', label: 'Hindi', native: 'हिन्दी' },
+  { id: 'Telugu', label: 'Telugu', native: 'తెలుగు' },
+  { id: 'Malayalam', label: 'Malayalam', native: 'മലയാളം' },
+  { id: 'Kannada', label: 'Kannada', native: 'ಕನ್ನಡ' },
+];
+
 const READING_LEVELS = ['Simple', 'Very Simple', 'Original'];
 
 export default function AccessibilityToolbar() {
@@ -21,21 +30,28 @@ export default function AccessibilityToolbar() {
     updateSettings,
     toggleDyslexiaFont,
     toggleHighContrast,
-    cycleFontSize,
+    setPreferredLanguage,
+    setShowApprovalModal,
+    speakText,
   } = useAccessibility();
-
-  const [isOpen, setIsOpen] = useState(false);
 
   const handleFontSizeChange = (size) => {
     updateSettings({ fontSize: size });
   };
 
   const handleLanguageChange = (e) => {
-    updateSettings({ preferredLanguage: e.target.value });
+    const newLang = e.target.value;
+    setPreferredLanguage(newLang);
   };
 
   const handleReadingLevelChange = (e) => {
     updateSettings({ readingLevel: e.target.value });
+  };
+
+  const handleTestSpeech = () => {
+    const lang = settings.preferredLanguage || 'English';
+    const greeting = ACCESSIBLE_GREETINGS[lang] || ACCESSIBLE_GREETINGS.English;
+    speakText(greeting, lang);
   };
 
   const handleReset = () => {
@@ -45,6 +61,7 @@ export default function AccessibilityToolbar() {
       highContrast: false,
       reducedMotion: false,
       autoReadAloud: false,
+      blindAccessibilityMode: false,
       preferredLanguage: 'English',
       readingLevel: 'Simple',
     });
@@ -63,8 +80,37 @@ export default function AccessibilityToolbar() {
             <span>Accessibility:</span>
           </span>
 
+          {/* Blind Mode & Voice Device Approval trigger */}
+          <button
+            onClick={() => setShowApprovalModal(true)}
+            className={`px-2.5 py-1 rounded-md text-xs font-bold border flex items-center gap-1.5 transition-colors ${
+              settings.blindAccessibilityMode || settings.autoReadAloud
+                ? 'bg-emerald-600 text-white border-emerald-400 ring-2 ring-emerald-300 ring-offset-1 ring-offset-slate-900'
+                : 'bg-slate-800 text-slate-200 border-slate-700 hover:bg-slate-700'
+            }`}
+            aria-label="Open Device Accessibility Approval for Blind users and Voice Guidance"
+          >
+            <Volume2 className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>Voice & Blind Assist: {settings.autoReadAloud ? 'ACTIVE' : 'SETUP'}</span>
+          </button>
+
+          {/* Speak / Test voice greeting */}
+          <button
+            onClick={handleTestSpeech}
+            className="p-1 px-2 rounded-md bg-slate-800 hover:bg-slate-700 text-xs text-brand-300 font-semibold border border-slate-700 flex items-center gap-1"
+            title="Listen to Spoken Welcome in your language"
+            aria-label="Listen to Spoken Welcome in your preferred language"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-brand-400" aria-hidden="true" />
+            <span>Voice Test</span>
+          </button>
+
           {/* Font Size Selector */}
-          <div className="flex items-center bg-slate-800 rounded-md p-0.5 border border-slate-700" role="group" aria-label="Text Size Controls">
+          <div
+            className="flex items-center bg-slate-800 rounded-md p-0.5 border border-slate-700"
+            role="group"
+            aria-label="Text Size Controls"
+          >
             <button
               onClick={() => handleFontSizeChange('small')}
               className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
@@ -136,44 +182,25 @@ export default function AccessibilityToolbar() {
             <SunMoon className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Contrast: {settings.highContrast ? 'HIGH' : 'NORMAL'}</span>
           </button>
-
-          {/* Auto Read-aloud Toggle */}
-          <button
-            onClick={() => updateSettings({ autoReadAloud: !settings.autoReadAloud })}
-            className={`px-2.5 py-1 rounded-md text-xs font-medium border flex items-center gap-1.5 transition-colors ${
-              settings.autoReadAloud
-                ? 'bg-emerald-600 text-white border-emerald-500'
-                : 'bg-slate-800 text-slate-200 border-slate-700 hover:bg-slate-700'
-            }`}
-            aria-label="Toggle Auto Read-Aloud on result generation"
-            aria-pressed={settings.autoReadAloud}
-          >
-            {settings.autoReadAloud ? (
-              <Volume2 className="w-3.5 h-3.5" aria-hidden="true" />
-            ) : (
-              <VolumeX className="w-3.5 h-3.5" aria-hidden="true" />
-            )}
-            <span>Auto Read: {settings.autoReadAloud ? 'ON' : 'OFF'}</span>
-          </button>
         </div>
 
         {/* Language & Reading Level Dropdowns */}
         <div className="flex flex-wrap items-center gap-2">
-          {/* Preferred Language */}
+          {/* Preferred Language with All Required Options */}
           <div className="flex items-center gap-1 bg-slate-800 px-2 py-1 rounded-md border border-slate-700">
             <Languages className="w-3.5 h-3.5 text-brand-400" aria-hidden="true" />
             <label htmlFor="toolbar-language" className="sr-only">
-              Select Preferred Language
+              Select Language
             </label>
             <select
               id="toolbar-language"
               value={settings.preferredLanguage}
               onChange={handleLanguageChange}
-              className="bg-transparent text-xs text-slate-200 focus:outline-none focus:text-white cursor-pointer"
+              className="bg-transparent text-xs text-slate-200 focus:outline-none focus:text-white cursor-pointer font-semibold"
             >
               {LANGUAGES.map((lang) => (
-                <option key={lang} value={lang} className="bg-slate-900 text-white">
-                  {lang}
+                <option key={lang.id} value={lang.id} className="bg-slate-900 text-white">
+                  {lang.native} ({lang.label})
                 </option>
               ))}
             </select>

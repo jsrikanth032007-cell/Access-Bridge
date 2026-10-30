@@ -12,3 +12,4 @@ export const updateProfileSchema = z.object({
   reducedMotion: z.boolean().optional(),
   autoReadAloud: z.boolean().optional(),
 });
+

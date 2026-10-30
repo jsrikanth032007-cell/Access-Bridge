@@ -21,3 +21,4 @@ router.post('/ask', askVoiceAssistant);
 router.post('/lecture-notes', upload.single('file'), generateLectureNotes);
 
 export default router;
+

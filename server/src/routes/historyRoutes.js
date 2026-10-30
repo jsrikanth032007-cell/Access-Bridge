@@ -15,3 +15,4 @@ router.get('/:id', getHistoryItem);
 router.delete('/:id', deleteHistoryItem);
 
 export default router;
+

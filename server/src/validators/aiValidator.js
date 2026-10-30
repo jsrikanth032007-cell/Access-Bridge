@@ -73,3 +73,4 @@ export const lectureNotesResultSchema = z.object({
     )
     .default([]),
 });
+

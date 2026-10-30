@@ -10,3 +10,4 @@ router.post('/login', authLimiter, login);
 router.get('/me', authenticate, getMe);
 
 export default router;
+

@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAccessibility } from '../context/AccessibilityContext.jsx';
+import { useSpeech } from '../hooks/useSpeech.js';
+import { useTTS } from '../hooks/useTTS.js';
 import api from '../services/api.js';
 import {
   GraduationCap,
@@ -12,17 +14,48 @@ import {
   HelpCircle,
   Award,
   RefreshCw,
+  Languages,
 } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner.jsx';
-import { TTSButton } from '../components/SpeechControls.jsx';
+import { TTSButton, MicInputButton } from '../components/SpeechControls.jsx';
+
+const ALL_LANGUAGES = [
+  { id: 'English', label: 'English', native: 'English' },
+  { id: 'Tamil', label: 'Tamil', native: 'தமிழ்' },
+  { id: 'Hindi', label: 'Hindi', native: 'हिन्दी' },
+  { id: 'Telugu', label: 'Telugu', native: 'తెలుగు' },
+  { id: 'Malayalam', label: 'Malayalam', native: 'മലയാളം' },
+  { id: 'Kannada', label: 'Kannada', native: 'ಕನ್ನಡ' },
+];
 
 export default function LectureNotes() {
   const { settings } = useAccessibility();
+  const { speak } = useTTS();
   const [transcript, setTranscript] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
+  const [language, setLanguage] = useState(settings.preferredLanguage || 'English');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
+
+  // Voice speech dictation hook for transcript input
+  const {
+    isListening,
+    transcript: speechText,
+    isSupported: isSpeechSupported,
+    startListening,
+    stopListening,
+    changeLanguage,
+  } = useSpeech({
+    language,
+    onResult: (text) => {
+      setTranscript((prev) => (prev ? `${prev} ${text}` : text));
+    },
+  });
+
+  useEffect(() => {
+    changeLanguage(language);
+  }, [language, changeLanguage]);
 
   // Interactive Quiz state
   const [selectedAnswers, setSelectedAnswers] = useState({});
@@ -43,7 +76,7 @@ export default function LectureNotes() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!transcript.trim() || transcript.trim().length < 10) {
-      setError('Please paste or upload a transcript of at least 10 characters.');
+      setError('Please paste or speak a transcript of at least 10 characters.');
       return;
     }
 
@@ -56,11 +89,16 @@ export default function LectureNotes() {
 
       const res = await api.post('/ai/lecture-notes', {
         transcript: transcript.trim(),
-        language: settings.preferredLanguage || 'English',
+        language,
       });
 
       if (res.data.success) {
         setResult(res.data.result);
+
+        // Auto read aloud if enabled in profile or blind accessibility mode
+        if (settings.autoReadAloud || settings.blindAccessibilityMode) {
+          speak(`${res.data.result.title}. ${res.data.result.summary}`, language);
+        }
       }
     } catch (err) {
       setError(
@@ -102,7 +140,7 @@ export default function LectureNotes() {
         <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
           Convert audio transcripts and educational lectures into clean structured summaries, key
           vocabulary definitions, and a 3-question self-assessment quiz designed for deaf/hard-of-hearing
-          students and ADHD learners.
+          students and ADHD learners in your preferred language.
         </p>
       </div>
 
@@ -123,6 +161,32 @@ export default function LectureNotes() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Language Selection */}
+          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <Languages className="w-4 h-4 text-purple-600" aria-hidden="true" />
+              <span>Generate Notes & Quiz in Language:</span>
+            </label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+              {ALL_LANGUAGES.map((lang) => (
+                <button
+                  type="button"
+                  key={lang.id}
+                  onClick={() => setLanguage(lang.id)}
+                  className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all flex flex-col items-center justify-center ${
+                    language === lang.id
+                      ? 'bg-purple-600 text-white border-purple-600 shadow-md ring-2 ring-purple-400'
+                      : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
+                  }`}
+                  aria-pressed={language === lang.id}
+                >
+                  <span className="text-sm">{lang.native}</span>
+                  <span className="text-[10px] opacity-80">{lang.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div>
             <div className="flex items-center justify-between mb-2">
               <label
@@ -131,21 +195,29 @@ export default function LectureNotes() {
               >
                 Lecture or Audio Transcript:
               </label>
-              <div>
-                <input
-                  id="lecture-file"
-                  type="file"
-                  accept=".txt"
-                  onChange={handleFileChange}
-                  className="sr-only"
+              <div className="flex items-center gap-2">
+                <MicInputButton
+                  isListening={isListening}
+                  onStart={startListening}
+                  onStop={stopListening}
+                  isSupported={isSpeechSupported}
                 />
-                <label
-                  htmlFor="lecture-file"
-                  className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline cursor-pointer flex items-center gap-1"
-                >
-                  <Upload className="w-3.5 h-3.5" aria-hidden="true" />
-                  <span>Upload .txt transcript</span>
-                </label>
+                <div>
+                  <input
+                    id="lecture-file"
+                    type="file"
+                    accept=".txt"
+                    onChange={handleFileChange}
+                    className="sr-only"
+                  />
+                  <label
+                    htmlFor="lecture-file"
+                    className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline cursor-pointer flex items-center gap-1"
+                  >
+                    <Upload className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>Upload .txt</span>
+                  </label>
+                </div>
               </div>
             </div>
 
@@ -154,7 +226,11 @@ export default function LectureNotes() {
               rows="7"
               value={transcript}
               onChange={(e) => setTranscript(e.target.value)}
-              placeholder="Paste recorded audio transcription, meeting notes, or classroom lecture text..."
+              placeholder={
+                isListening
+                  ? `Listening to your dictation in ${language}...`
+                  : 'Paste recorded audio transcription, meeting notes, classroom lecture text, or click Speak Query...'
+              }
               className="w-full p-4 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 text-base"
             />
           </div>
@@ -165,11 +241,11 @@ export default function LectureNotes() {
             className="w-full py-3.5 px-6 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-base shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {isLoading ? (
-              <LoadingSpinner message="Generating accessible lecture notes & quiz..." size="sm" />
+              <LoadingSpinner message={`Generating accessible lecture notes & quiz in ${language}...`} size="sm" />
             ) : (
               <>
                 <Sparkles className="w-5 h-5" aria-hidden="true" />
-                <span>Generate Notes & Comprehension Quiz</span>
+                <span>Generate Notes & Comprehension Quiz ({language})</span>
               </>
             )}
           </button>
@@ -187,13 +263,13 @@ export default function LectureNotes() {
           <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800">
             <div>
               <span className="text-xs font-bold uppercase text-purple-700 dark:text-purple-300">
-                Study Guide Ready
+                Study Guide Ready ({language})
               </span>
               <h2 className="text-lg font-extrabold text-slate-900 dark:text-white">
                 {result.title}
               </h2>
             </div>
-            <TTSButton text={`${result.title}. ${result.summary}`} label="Read Summary Aloud" />
+            <TTSButton text={`${result.title}. ${result.summary}`} language={language} label={`Read Summary in ${language}`} />
           </div>
 
           {/* (1) Structured Summary */}

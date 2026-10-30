@@ -284,3 +284,4 @@ All protected endpoints require the header: `Authorization: Bearer <JWT_TOKEN>`.
 ## License
 
 This project is licensed under the MIT License – built to ensure universal digital equity and inclusion.
+

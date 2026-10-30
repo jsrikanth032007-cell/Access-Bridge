@@ -341,3 +341,4 @@ export default function History() {
     </main>
   );
 }
+

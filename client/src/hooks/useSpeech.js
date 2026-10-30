@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
-// Maps language name to speech recognition BCP-47 language tag
-const LANGUAGE_CODES = {
+export const LANGUAGE_CODES = {
   English: 'en-US',
   Tamil: 'ta-IN',
   Hindi: 'hi-IN',
@@ -15,9 +14,16 @@ export const useSpeech = (options = {}) => {
   const [transcript, setTranscript] = useState('');
   const [error, setError] = useState(null);
   const [isSupported, setIsSupported] = useState(true);
+  const [currentLanguage, setCurrentLanguage] = useState(options.language || 'English');
 
   const recognitionRef = useRef(null);
-  const preferredLang = options.language || 'English';
+
+  // Sync language if option prop changes
+  useEffect(() => {
+    if (options.language) {
+      setCurrentLanguage(options.language);
+    }
+  }, [options.language]);
 
   useEffect(() => {
     const SpeechRecognition =
@@ -31,7 +37,7 @@ export const useSpeech = (options = {}) => {
     const recognition = new SpeechRecognition();
     recognition.continuous = options.continuous !== undefined ? options.continuous : true;
     recognition.interimResults = true;
-    recognition.lang = LANGUAGE_CODES[preferredLang] || 'en-US';
+    recognition.lang = LANGUAGE_CODES[currentLanguage] || 'en-US';
 
     recognition.onstart = () => {
       setIsListening(true);
@@ -53,11 +59,13 @@ export const useSpeech = (options = {}) => {
     };
 
     recognition.onerror = (event) => {
-      console.warn('[SpeechRecognition Error]:', event.error);
       if (event.error === 'not-allowed') {
         setError('Microphone access was denied. Please allow microphone permissions in your browser.');
       } else if (event.error === 'no-speech') {
-        setError('No speech was detected. Please try speaking closer to your microphone.');
+        // no-speech is common when paused; keep subtle
+        setError('No speech detected. Please speak closer to your microphone.');
+      } else if (event.error === 'network') {
+        setError('Network required for speech recognition. Please check your internet connection.');
       } else {
         setError(`Speech recognition notice: ${event.error}`);
       }
@@ -75,11 +83,11 @@ export const useSpeech = (options = {}) => {
         try {
           recognitionRef.current.abort();
         } catch {
-          // ignore cleanup abort errors
+          // ignore
         }
       }
     };
-  }, [preferredLang, options.continuous]);
+  }, [currentLanguage, options.continuous]);
 
   const startListening = useCallback(() => {
     if (!recognitionRef.current) {
@@ -89,12 +97,12 @@ export const useSpeech = (options = {}) => {
     setError(null);
     setTranscript('');
     try {
+      recognitionRef.current.lang = LANGUAGE_CODES[currentLanguage] || 'en-US';
       recognitionRef.current.start();
     } catch (err) {
-      // If already started, ignore or restart
-      console.warn('Speech start warning:', err.message);
+      console.warn('[useSpeech] Start warning:', err.message);
     }
-  }, []);
+  }, [currentLanguage]);
 
   const stopListening = useCallback(() => {
     if (recognitionRef.current && isListening) {
@@ -111,6 +119,13 @@ export const useSpeech = (options = {}) => {
     setTranscript('');
   }, []);
 
+  const changeLanguage = useCallback((newLang) => {
+    setCurrentLanguage(newLang);
+    if (recognitionRef.current) {
+      recognitionRef.current.lang = LANGUAGE_CODES[newLang] || 'en-US';
+    }
+  }, []);
+
   return {
     isListening,
     transcript,
@@ -119,6 +134,8 @@ export const useSpeech = (options = {}) => {
     startListening,
     stopListening,
     resetTranscript,
+    changeLanguage,
+    currentLanguage,
   };
 };
 
