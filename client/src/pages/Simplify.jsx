@@ -1,27 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAccessibility } from '../context/AccessibilityContext.jsx';
-import { useSpeech } from '../hooks/useSpeech.js';
-import { useTTS } from '../hooks/useTTS.js';
-import api from '../services/api.js';
 import {
+  Sparkles,
+  Loader2,
+  AlertTriangle,
   FileText,
   Upload,
   Globe,
+  Mic,
+  MicOff,
+  HelpCircle,
+  BookOpen,
   CheckCircle2,
   ListOrdered,
-  BookOpen,
-  Languages,
-  Sparkles,
-  AlertCircle,
-  HelpCircle,
-  Copy,
-  Check,
-  Volume2,
-  Mic,
+  BookMarked,
+  ArrowRight,
 } from 'lucide-react';
-import LoadingSpinner from '../components/LoadingSpinner.jsx';
-import { TTSButton, MicInputButton } from '../components/SpeechControls.jsx';
+import ResultCard from '../components/ResultCard';
+import { useA11y } from '../context/AccessibilityContext';
+import { useSpeech } from '../hooks/useSpeech';
+import api from '../services/api';
 
 const LANGUAGES = [
   { id: 'English', label: 'English', native: 'English' },
@@ -31,54 +29,75 @@ const LANGUAGES = [
   { id: 'Malayalam', label: 'Malayalam', native: 'മലയാളം' },
   { id: 'Kannada', label: 'Kannada', native: 'ಕನ್ನಡ' },
 ];
-const READING_LEVELS = ['Simple', 'Very Simple', 'Original'];
+
+const READING_LEVELS = [
+  { id: 'Simple', label: 'Simple (Clear & direct)' },
+  { id: 'Very Simple', label: 'Very Simple (Plain words, short sentences)' },
+  { id: 'Original', label: 'Original (Light edit only)' },
+];
+
+const DEMO_SAMPLES = [
+  {
+    name: 'Tamil Govt Notice',
+    lang: 'Tamil',
+    text: `தமிழ்நாடு அரசு மாற்றுத்திறனாளிகள் நலத்துறை அரசாணை எண் 42/2024: அனைத்து மாற்றுத்திறனாளிகளும் தனித்துவ அடையாள அட்டை (UDID) பெறுவது கட்டாயமாக்கப்பட்டுள்ளது. இந்த அட்டையின் மூலம் அரசுப் பேருந்துகளில் 100% இலவச பயணம், மாதாந்திர பராமரிப்பு உதவித்தொகை ரூ.2,000, மற்றும் கல்வி உதவித்தொகை நேரடியாக வங்கிக் கணக்கில் வரவு வைக்கப்படும். தகுதியுடைய நபர்கள் தங்களின் மருத்துவச் சான்றிதழ், ஆதார் அட்டை, ரேஷன் அட்டை மற்றும் இருப்பிடச் சான்றுடன் அருகிலுள்ள இ-சேவை மையத்தில் 30 நாட்களுக்குள் விண்ணப்பிக்க வேண்டும். சந்தேகங்களுக்கு 1800-425-0111 என்ற இலவச தொலைபேசி எண்ணை அழைக்கலாம்.`,
+  },
+  {
+    name: 'Legal Lease Agreement',
+    lang: 'English',
+    text: `Section 14(c) Indemnification and Liability: The Tenant covenants to indemnify, defend, and hold harmless the Landlord, its agents, and employees against any and all liabilities, damages, claims, or expenses, including reasonable attorney fees, arising out of any occurrence upon the leased premises occasioned wholly or in part by any act or omission of the Tenant. Failure to remit monthly dues within five consecutive calendar days of the due date shall incur a mandatory liquidated statutory surcharge of fifteen percent compounded bi-weekly.`,
+  },
+  {
+    name: 'Hospital Discharge Summary',
+    lang: 'English',
+    text: `Patient diagnosed with acute post-operative hypertension secondary to mild renal insufficiency. Strict adherence to pharmacotherapy mandated: Metoprolol tartrate 50mg b.i.d. per os postprandial; avoid NSAIDs due to nephrotoxic potential. Daily sodium restriction <1500mg. Schedule mandatory follow-up nephrology consultation within 7 days. Report immediately to emergency department if systolic BP exceeds 160 mmHg, or if experiencing peripheral edema or acute dyspnea.`,
+  },
+];
 
 export default function Simplify() {
-  const { settings } = useAccessibility();
-  const { speak } = useTTS();
+  const { s } = useA11y();
   const navigate = useNavigate();
 
-  // Input tabs: 'text' | 'file' | 'url'
-  const [activeTab, setActiveTab] = useState('text');
-  const [inputText, setInputText] = useState('');
-  const [inputUrl, setInputUrl] = useState('');
+  // Input states
+  const [activeTab, setActiveTab] = useState('text'); // 'text' | 'file' | 'url'
+  const [text, setText] = useState('');
+  const [url, setUrl] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
 
-  // Profile-backed options
-  const [readingLevel, setReadingLevel] = useState(settings.readingLevel || 'Simple');
-  const [language, setLanguage] = useState(settings.preferredLanguage || 'English');
+  // Settings
+  const [readingLevel, setReadingLevel] = useState(s.readingLevel || 'Simple');
+  const [language, setLanguage] = useState(s.preferredLanguage || 'English');
 
-  const [isLoading, setIsLoading] = useState(false);
+  // Loading & Result states
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [result, setResult] = useState(null);
-  const [copiedKey, setCopiedKey] = useState('');
+  const [data, setData] = useState(null);
 
-  // Voice speech dictation hook for text input
+  // Voice dictation hook
   const {
     isListening,
-    transcript,
-    error: speechError,
-    isSupported: isSpeechSupported,
     startListening,
     stopListening,
-    resetTranscript,
+    isSupported: isSpeechSupported,
     changeLanguage,
   } = useSpeech({
     language,
-    onResult: (text) => {
-      setInputText((prev) => (prev ? `${prev} ${text}` : text));
+    onResult: (spokenText) => {
+      setText((prev) => (prev ? `${prev} ${spokenText}` : spokenText));
     },
   });
 
   useEffect(() => {
-    changeLanguage(language);
+    if (changeLanguage) {
+      changeLanguage(language);
+    }
   }, [language, changeLanguage]);
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       if (!['application/pdf', 'text/plain'].includes(file.type)) {
-        setError('Please upload a valid .pdf or .txt file.');
+        setError('Please upload a valid .pdf or .txt document.');
         return;
       }
       setSelectedFile(file);
@@ -86,284 +105,291 @@ export default function Simplify() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const loadSample = (sample) => {
+    setActiveTab('text');
+    setText(sample.text);
+    if (sample.lang) setLanguage(sample.lang);
     setError('');
-    setResult(null);
+    setData(null);
+  };
 
-    // Form data for multipart upload or json
+  const submit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setData(null);
+
     const formData = new FormData();
     formData.append('readingLevel', readingLevel);
     formData.append('language', language);
 
     if (activeTab === 'text') {
-      if (!inputText.trim()) {
+      if (!text.trim()) {
         setError('Please enter or paste the text you want to simplify.');
+        setLoading(false);
         return;
       }
-      formData.append('text', inputText.trim());
+      formData.append('text', text.trim());
     } else if (activeTab === 'url') {
-      if (!inputUrl.trim()) {
+      if (!url.trim()) {
         setError('Please enter a website URL.');
+        setLoading(false);
         return;
       }
-      formData.append('url', inputUrl.trim());
+      formData.append('url', url.trim());
     } else if (activeTab === 'file') {
       if (!selectedFile) {
-        setError('Please select a .pdf or .txt document to upload.');
+        setError('Please select a .pdf or .txt file to upload.');
+        setLoading(false);
         return;
       }
       formData.append('file', selectedFile);
     }
 
     try {
-      setIsLoading(true);
       const res = await api.post('/ai/simplify', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      if (res.data.success) {
-        setResult(res.data.result);
-
-        // Auto read aloud if enabled in user profile or blind accessibility mode
-        if (settings.autoReadAloud || settings.blindAccessibilityMode) {
-          speak(res.data.result.plainLanguage, language);
-        }
+      if (res.data.success && res.data.result) {
+        const raw = res.data.result;
+        setData({
+          plainVersion: raw.plainLanguage || raw.plainVersion || '',
+          keyPoints: raw.keyPoints || [],
+          nextSteps: raw.actionSteps || raw.nextSteps || [],
+          glossary: raw.glossary || [],
+          translation:
+            typeof raw.translation === 'object' && raw.translation !== null
+              ? raw.translation
+              : {
+                  language: res.data.language || language,
+                  text: raw.translation || '',
+                },
+          warnings: raw.warnings || [],
+        });
+      } else {
+        setError('We could not process this right now. Please try again.');
       }
     } catch (err) {
       setError(
         err.response?.data?.message ||
-          'Failed to simplify content. Please check your network and try again.'
+          'We could not process this right now. Please check your network and try again.'
       );
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  const handleCopy = (text, key) => {
-    navigator.clipboard.writeText(text);
-    setCopiedKey(key);
-    setTimeout(() => setCopiedKey(''), 2000);
-  };
-
   const handleAskAssistant = () => {
-    if (result) {
-      navigate('/voice-assistant', {
-        state: { context: result.plainLanguage },
+    if (data?.plainVersion) {
+      navigate('/voice', {
+        state: { context: data.plainVersion },
       });
     }
   };
 
   return (
-    <main
-      id="main-content"
-      tabIndex="-1"
-      className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 focus:outline-none space-y-8"
-    >
-      {/* Page Title & Help */}
-      <div className="space-y-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-          <FileText className="w-3.5 h-3.5" aria-hidden="true" />
-          <span>Assistive Simplifier</span>
-        </div>
-        <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white">
-          Content Simplifier
-        </h1>
-        <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
-          Paste complex notices, upload PDFs, or enter URLs. AccessBridge translates dense jargon
-          into plain language, highlights action items, explains tough terms, and provides regional
-          translations.
+    <div className="space-y-6">
+      {/* Header */}
+      <header>
+        <h2 className="text-3xl font-bold tracking-tight text-ink">Simplify any content</h2>
+        <p className="mt-1 text-muted text-base leading-relaxed">
+          Paste a notice, form, or article. We make it clear, short, and translated.
         </p>
-      </div>
+      </header>
 
-      {/* Input Options Card */}
-      <section
-        aria-label="Input Content Form"
-        className="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 dark:border-slate-800 space-y-6"
-      >
-        {/* Method Tabs */}
-        <div
-          role="tablist"
-          aria-label="Select input format"
-          className="flex border-b border-slate-200 dark:border-slate-800 space-x-4"
-        >
-          <button
-            role="tab"
-            aria-selected={activeTab === 'text'}
-            onClick={() => setActiveTab('text')}
-            className={`py-3 px-3 text-sm font-bold border-b-2 flex items-center gap-2 transition-colors ${
-              activeTab === 'text'
-                ? 'border-brand-600 text-brand-600 dark:text-brand-400'
-                : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'
-            }`}
+      {/* Main Input Card */}
+      <section className="card space-y-6" aria-labelledby="input-heading">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
+          {/* Format Tabs */}
+          <div
+            role="tablist"
+            aria-label="Input options"
+            className="flex items-center gap-2 overflow-x-auto"
           >
-            <FileText className="w-4 h-4" aria-hidden="true" />
-            <span>Paste Text</span>
-          </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activeTab === 'text'}
+              onClick={() => setActiveTab('text')}
+              className={`btn-ghost !min-h-[44px] !px-4 text-sm font-semibold ${
+                activeTab === 'text'
+                  ? 'bg-brand-100 text-brand-700 border-brand-600'
+                  : 'text-muted hover:text-ink'
+              }`}
+            >
+              <FileText size={18} aria-hidden="true" />
+              <span>Paste Text</span>
+            </button>
 
-          <button
-            role="tab"
-            aria-selected={activeTab === 'file'}
-            onClick={() => setActiveTab('file')}
-            className={`py-3 px-3 text-sm font-bold border-b-2 flex items-center gap-2 transition-colors ${
-              activeTab === 'file'
-                ? 'border-brand-600 text-brand-600 dark:text-brand-400'
-                : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'
-            }`}
-          >
-            <Upload className="w-4 h-4" aria-hidden="true" />
-            <span>Upload Document (.pdf, .txt)</span>
-          </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activeTab === 'file'}
+              onClick={() => setActiveTab('file')}
+              className={`btn-ghost !min-h-[44px] !px-4 text-sm font-semibold ${
+                activeTab === 'file'
+                  ? 'bg-brand-100 text-brand-700 border-brand-600'
+                  : 'text-muted hover:text-ink'
+              }`}
+            >
+              <Upload size={18} aria-hidden="true" />
+              <span>Upload Document</span>
+            </button>
 
-          <button
-            role="tab"
-            aria-selected={activeTab === 'url'}
-            onClick={() => setActiveTab('url')}
-            className={`py-3 px-3 text-sm font-bold border-b-2 flex items-center gap-2 transition-colors ${
-              activeTab === 'url'
-                ? 'border-brand-600 text-brand-600 dark:text-brand-400'
-                : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'
-            }`}
-          >
-            <Globe className="w-4 h-4" aria-hidden="true" />
-            <span>Web Page URL</span>
-          </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activeTab === 'url'}
+              onClick={() => setActiveTab('url')}
+              className={`btn-ghost !min-h-[44px] !px-4 text-sm font-semibold ${
+                activeTab === 'url'
+                  ? 'bg-brand-100 text-brand-700 border-brand-600'
+                  : 'text-muted hover:text-ink'
+              }`}
+            >
+              <Globe size={18} aria-hidden="true" />
+              <span>Web URL</span>
+            </button>
+          </div>
+
+          {/* Quick Demo Pre-load Samples for Judges */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-muted hidden sm:inline">Try Sample:</span>
+            {DEMO_SAMPLES.map((sample) => (
+              <button
+                key={sample.name}
+                type="button"
+                onClick={() => loadSample(sample)}
+                className="btn-ghost !min-h-[38px] !px-2.5 text-xs font-medium text-brand-700 hover:bg-brand-100"
+                title={`Load sample: ${sample.name}`}
+              >
+                {sample.name}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {error && (
-          <div
-            role="alert"
-            aria-live="polite"
-            className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-300 dark:border-rose-800 text-rose-800 dark:text-rose-200 text-sm flex items-start gap-2.5"
-          >
-            <AlertCircle className="w-5 h-5 flex-shrink-0 text-rose-600" aria-hidden="true" />
-            <span>{error}</span>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Input Form */}
+        <form onSubmit={submit} className="space-y-5">
           {/* Tab 1: Paste Text */}
           {activeTab === 'text' && (
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <label
-                  htmlFor="input-text"
-                  className="block text-sm font-semibold text-slate-800 dark:text-slate-200"
-                >
-                  Paste complex text or speak with microphone:
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label htmlFor="content" className="font-semibold text-ink text-base">
+                  Your content
                 </label>
-                <MicInputButton
-                  isListening={isListening}
-                  onStart={startListening}
-                  onStop={stopListening}
-                  isSupported={isSpeechSupported}
-                />
+                {isSpeechSupported && (
+                  <button
+                    type="button"
+                    onClick={isListening ? stopListening : startListening}
+                    className={`btn-ghost !min-h-[44px] !px-3 text-xs font-semibold ${
+                      isListening ? 'bg-rose-100 text-rose-700 border-rose-300 animate-pulse' : ''
+                    }`}
+                    aria-label={isListening ? 'Stop voice dictation' : 'Start voice dictation with microphone'}
+                  >
+                    {isListening ? (
+                      <>
+                        <MicOff size={16} aria-hidden="true" />
+                        <span>Listening...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Mic size={16} aria-hidden="true" />
+                        <span>Dictate with Mic</span>
+                      </>
+                    )}
+                  </button>
+                )}
               </div>
               <textarea
-                id="input-text"
-                rows="6"
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                placeholder={
-                  isListening
-                    ? `Listening in ${language}... speak clearly`
-                    : "e.g. In accordance with Section 4(b), the tenant shall indemnify and hold harmless the landlord against any claims, losses, or liabilities resulting from accidental water damage..."
-                }
-                className="w-full p-4 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 text-base"
+                id="content"
+                rows={8}
+                className="input focus:outline-none"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="Paste legal notice, medical note, or complex article here…"
+                required
               />
             </div>
           )}
 
           {/* Tab 2: Upload File */}
           {activeTab === 'file' && (
-            <div>
-              <label
-                htmlFor="file-upload"
-                className="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-2"
-              >
-                Choose a PDF or plain text (.txt) file:
+            <div className="space-y-2">
+              <label htmlFor="file-input" className="font-semibold text-ink text-base block">
+                Upload PDF or Text document (.pdf, .txt)
               </label>
-              <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-8 text-center space-y-3 bg-slate-50 dark:bg-slate-800/40">
-                <Upload className="w-10 h-10 text-slate-400 mx-auto" aria-hidden="true" />
+              <div className="rounded-2xl border-2 border-dashed border-line bg-surface p-8 text-center space-y-3">
+                <Upload size={32} className="mx-auto text-muted" aria-hidden="true" />
                 <div>
                   <input
-                    id="file-upload"
+                    id="file-input"
                     type="file"
                     accept=".pdf,.txt,application/pdf,text/plain"
                     onChange={handleFileChange}
                     className="sr-only"
                   />
-                  <label
-                    htmlFor="file-upload"
-                    className="inline-block px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm cursor-pointer shadow-sm transition-colors"
-                  >
-                    Browse Document
+                  <label htmlFor="file-input" className="btn-primary cursor-pointer !min-h-[44px]">
+                    Choose Document
                   </label>
                 </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-muted">
                   {selectedFile
-                    ? `Selected file: ${selectedFile.name} (${(selectedFile.size / 1024).toFixed(1)} KB)`
-                    : 'Supports PDF & TXT up to 10MB'}
+                    ? `Selected: ${selectedFile.name} (${(selectedFile.size / 1024).toFixed(1)} KB)`
+                    : 'Supports PDF & TXT files up to 10MB'}
                 </p>
               </div>
             </div>
           )}
 
-          {/* Tab 3: URL */}
+          {/* Tab 3: Web URL */}
           {activeTab === 'url' && (
-            <div>
-              <label
-                htmlFor="input-url"
-                className="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-2"
-              >
-                Enter the web URL to extract and simplify:
+            <div className="space-y-2">
+              <label htmlFor="url-input" className="font-semibold text-ink text-base block">
+                Website or Article URL
               </label>
               <input
-                id="input-url"
+                id="url-input"
                 type="url"
-                value={inputUrl}
-                onChange={(e) => setInputUrl(e.target.value)}
-                placeholder="https://example.gov/voter-registration-guide"
-                className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 text-base"
+                className="input focus:outline-none"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="https://example.gov/gazette/welfare-notice"
+                required
               />
             </div>
           )}
 
-          {/* Profile Overrides / Configuration */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+          {/* Reading Level & Translation Selection */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-line">
             <div>
-              <label
-                htmlFor="simplify-reading-level"
-                className="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
-              >
+              <label htmlFor="reading-level" className="block text-xs font-bold uppercase text-muted mb-1.5">
                 Target Reading Level
               </label>
               <select
-                id="simplify-reading-level"
+                id="reading-level"
                 value={readingLevel}
                 onChange={(e) => setReadingLevel(e.target.value)}
-                className="w-full p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm"
+                className="input !py-2.5 text-sm font-medium"
               >
                 {READING_LEVELS.map((lvl) => (
-                  <option key={lvl} value={lvl}>
-                    {lvl} Level
+                  <option key={lvl.id} value={lvl.id}>
+                    {lvl.label}
                   </option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label
-                htmlFor="simplify-language"
-                className="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
-              >
-                Translate Summary Into
+              <label htmlFor="target-language" className="block text-xs font-bold uppercase text-muted mb-1.5">
+                Translate Into
               </label>
               <select
-                id="simplify-language"
+                id="target-language"
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
-                className="w-full p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-semibold"
+                className="input !py-2.5 text-sm font-semibold"
               >
                 {LANGUAGES.map((lang) => (
                   <option key={lang.id} value={lang.id}>
@@ -374,177 +400,155 @@ export default function Simplify() {
             </div>
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
-            disabled={isLoading}
-            className="w-full py-3.5 px-6 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-base shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            className="btn-primary w-full sm:w-auto text-base !min-h-[48px]"
+            disabled={
+              loading ||
+              (activeTab === 'text' && !text.trim()) ||
+              (activeTab === 'file' && !selectedFile) ||
+              (activeTab === 'url' && !url.trim())
+            }
           >
-            {isLoading ? (
-              <LoadingSpinner message="Gemini AI is simplifying your content..." size="sm" />
+            {loading ? (
+              <Loader2 className="animate-spin" size={20} aria-hidden="true" />
             ) : (
-              <>
-                <Sparkles className="w-5 h-5" aria-hidden="true" />
-                <span>Simplify Content Now</span>
-              </>
+              <Sparkles size={20} aria-hidden="true" />
             )}
+            <span>{loading ? 'Simplifying…' : 'Simplify Content'}</span>
           </button>
         </form>
       </section>
 
-      {/* AI Result Section */}
-      {result && (
-        <section
-          aria-live="polite"
-          aria-label="Simplification Results"
-          className="space-y-6 pt-4 animate-fadeIn"
-        >
-          {/* Header Action Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600" aria-hidden="true" />
-              <span className="font-bold text-emerald-900 dark:text-emerald-200 text-sm">
-                Simplification Complete ({readingLevel} Level • {language})
-              </span>
-            </div>
+      {/* Screen readers announce results and errors automatically */}
+      <div aria-live="polite" aria-busy={loading} className="space-y-6">
+        {/* Error Alert */}
+        {error && (
+          <div
+            role="alert"
+            className="flex items-start gap-3 rounded-2xl border border-rose-300 bg-rose-50 p-4 text-rose-900"
+          >
+            <AlertTriangle className="flex-shrink-0 mt-0.5" size={20} aria-hidden="true" />
+            <div className="text-sm font-medium">{error}</div>
+          </div>
+        )}
 
-            <div className="flex flex-wrap items-center gap-2">
-              <TTSButton
-                text={`${result.plainLanguage}. Key points: ${result.keyPoints.join('. ')}`}
-                language={language === 'English' ? 'English' : language}
-                label="Listen to All"
-              />
+        {/* AI Results */}
+        {data && (
+          <div className="space-y-6 pt-2">
+            {/* Top Bar for Results */}
+            <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-brand-50 border border-brand-100">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 size={20} className="text-brand-700" aria-hidden="true" />
+                <span className="font-bold text-brand-700 text-sm">
+                  Content Simplified Successfully ({readingLevel} • {language})
+                </span>
+              </div>
               <button
+                type="button"
                 onClick={handleAskAssistant}
-                className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-sm transition-colors"
-                aria-label="Ask questions about this simplified document with voice assistant"
+                className="btn-ghost !min-h-[40px] text-xs font-semibold text-brand-700 hover:bg-brand-100 flex items-center gap-1.5"
+                aria-label="Ask questions about this text in Voice Assistant"
               >
-                <HelpCircle className="w-4 h-4" aria-hidden="true" />
+                <HelpCircle size={16} aria-hidden="true" />
                 <span>Ask Voice Assistant</span>
+                <ArrowRight size={14} aria-hidden="true" />
               </button>
             </div>
+
+            {/* 1. Plain Version */}
+            {data.plainVersion && (
+              <ResultCard title="Plain version" text={data.plainVersion} lang={language} />
+            )}
+
+            {/* 2. Key Points */}
+            {data.keyPoints?.length > 0 && (
+              <ResultCard title="Key points" text={data.keyPoints.join('. ')} lang={language}>
+                <ul className="space-y-2 mt-3 list-none pl-0">
+                  {data.keyPoints.map((point, idx) => (
+                    <li
+                      key={idx}
+                      className="flex items-start gap-3 p-3 rounded-xl bg-surface border border-line text-ink text-sm leading-relaxed"
+                    >
+                      <span className="grid h-6 w-6 place-items-center rounded-full bg-brand-700 text-white font-bold text-xs flex-shrink-0 mt-0.5">
+                        {idx + 1}
+                      </span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </ResultCard>
+            )}
+
+            {/* 3. Action Steps Checklist */}
+            {data.nextSteps?.length > 0 && (
+              <ResultCard
+                title="What should I do next?"
+                text={data.nextSteps.join('. ')}
+                lang={language}
+              >
+                <ol className="space-y-2 mt-3 list-none pl-0">
+                  {data.nextSteps.map((step, idx) => (
+                    <li
+                      key={idx}
+                      className="flex items-start gap-3 p-3 rounded-xl bg-surface border border-line text-ink text-sm leading-relaxed"
+                    >
+                      <ListOrdered size={18} className="text-brand-700 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                      <span>{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              </ResultCard>
+            )}
+
+            {/* 4. Regional Translation */}
+            {data.translation?.text && (
+              <ResultCard
+                title={`Translation (${data.translation.language || language})`}
+                text={data.translation.text}
+                lang={data.translation.language || language}
+              />
+            )}
+
+            {/* 5. Difficult Words Glossary */}
+            {data.glossary?.length > 0 && (
+              <ResultCard title="Difficult words explained (Glossary)" lang={language}>
+                <div className="grid gap-3 sm:grid-cols-2 mt-2">
+                  {data.glossary.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="p-3.5 rounded-xl bg-surface border border-line space-y-1"
+                    >
+                      <div className="flex items-center gap-2">
+                        <BookMarked size={16} className="text-brand-700" aria-hidden="true" />
+                        <h3 className="font-bold text-ink text-sm">{item.term}</h3>
+                      </div>
+                      <p className="text-xs text-muted leading-relaxed">
+                        {item.definition || item.explanation}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </ResultCard>
+            )}
+
+            {/* 6. Warnings / Important Notice */}
+            {data.warnings?.length > 0 && (
+              <div
+                role="note"
+                className="flex items-start gap-3 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-amber-900"
+              >
+                <AlertTriangle className="flex-shrink-0 mt-0.5 text-amber-700" size={20} aria-hidden="true" />
+                <div className="text-sm">
+                  <strong>Important: </strong>
+                  <span>{data.warnings.join(' ')}</span>
+                </div>
+              </div>
+            )}
           </div>
-
-          {/* (a) Plain Language Version */}
-          <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-brand-600" aria-hidden="true" />
-                <span>Plain Language Version</span>
-              </h2>
-              <div className="flex items-center gap-2">
-                <TTSButton text={result.plainLanguage} language={language} label="Read" />
-                <button
-                  onClick={() => handleCopy(result.plainLanguage, 'plain')}
-                  className="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white"
-                  title="Copy plain language text"
-                  aria-label="Copy plain language text"
-                >
-                  {copiedKey === 'plain' ? (
-                    <Check className="w-4 h-4 text-emerald-600" />
-                  ) : (
-                    <Copy className="w-4 h-4" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 leading-relaxed whitespace-pre-line text-base">
-              {result.plainLanguage}
-            </div>
-          </div>
-
-          {/* (b) 3-Bullet Key Points */}
-          <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600" aria-hidden="true" />
-              <span>3-Bullet Key Takeaways</span>
-            </h2>
-
-            <ul className="space-y-3">
-              {result.keyPoints.map((point, idx) => (
-                <li
-                  key={idx}
-                  className="p-4 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 text-slate-800 dark:text-slate-100 flex items-start gap-3 text-base"
-                >
-                  <span className="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
-                    {idx + 1}
-                  </span>
-                  <span>{point}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* (c) What should I do next? Action Steps */}
-          {result.actionSteps && result.actionSteps.length > 0 && (
-            <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <ListOrdered className="w-5 h-5 text-amber-500" aria-hidden="true" />
-                <span>What Should I Do Next? (Action Steps)</span>
-              </h2>
-
-              <div className="space-y-2">
-                {result.actionSteps.map((step, idx) => (
-                  <label
-                    key={idx}
-                    className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-start gap-3 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                  >
-                    <input
-                      type="checkbox"
-                      className="mt-1 w-4 h-4 text-brand-600 rounded border-slate-300 focus:ring-brand-500"
-                    />
-                    <span className="text-base text-slate-800 dark:text-slate-200">{step}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* (d) Glossary of Difficult Words */}
-          {result.glossary && result.glossary.length > 0 && (
-            <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-purple-600" aria-hidden="true" />
-                <span>Difficult Words Glossary</span>
-              </h2>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {result.glossary.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="p-4 rounded-xl bg-purple-50/50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800/50 space-y-1"
-                  >
-                    <span className="font-bold text-purple-900 dark:text-purple-300 text-sm block">
-                      {item.term}
-                    </span>
-                    <p className="text-sm text-slate-700 dark:text-slate-300">
-                      {item.definition}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* (e) Translation */}
-          {result.translation && (
-            <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <Languages className="w-5 h-5 text-blue-600" aria-hidden="true" />
-                  <span>Translation ({language})</span>
-                </h2>
-                <TTSButton text={result.translation} language={language} label="Read Translation" />
-              </div>
-
-              <div className="p-4 rounded-xl bg-blue-50/50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 text-slate-800 dark:text-slate-100 leading-relaxed whitespace-pre-line text-base">
-                {result.translation}
-              </div>
-            </div>
-          )}
-        </section>
-      )}
-    </main>
+        )}
+      </div>
+    </div>
   );
 }
-

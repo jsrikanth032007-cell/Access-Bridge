@@ -91,7 +91,7 @@
       "disabilityTypes": [
         "visual"
       ],
-      "preferredLanguage": "Telugu",
+      "preferredLanguage": "Tamil",
       "readingLevel": "Simple",
       "fontSize": "xlarge",
       "dyslexiaFont": false,
@@ -99,10 +99,160 @@
       "reducedMotion": false,
       "autoReadAloud": true,
       "createdAt": "2026-10-30T08:50:16.850Z",
-      "updatedAt": "2026-10-30T10:15:05.720Z"
+      "updatedAt": "2026-10-30T10:29:18.862Z"
     }
   ],
   "histories": [
+    {
+      "_id": "hh0zq9nsmvutzxz5",
+      "userId": "ixrstbkwmvuqezdc",
+      "featureType": "lecture-notes",
+      "title": "விடுதி மாணவர்களுக்கான முழுமையான சமச்சீர் உணவு அட்டவணை",
+      "inputData": {
+        "transcriptSnippet": "📅 The Complete Hostel Balanced Diet Chart (With Night Milk)\r\nDay\tMorning Breakfast (Probiotics & Protein)\tAfternoon Lunch (Carbs & Fats)\tEvening Snack (Plant Protein)\tNight Dinner & Bedtime (Recovery & Growth)\r\nMonday\tFermented Rice + Shop Curd (₹12)\tMess Meals + Buttermilk + Handful Peanuts (₹20)\t"
+      },
+      "outputData": {
+        "title": "விடுதி மாணவர்களுக்கான முழுமையான சமச்சீர் உணவு அட்டவணை",
+        "summary": "• இது விடுதி மாணவர்களுக்காக பிரத்யேகமாக வடிவமைக்கப்பட்ட ஒரு வாராந்திர சமச்சீர் உணவு அட்டவணை ஆகும்.\n• காலை உணவில் புரோபயாடிக் மற்றும் புரதச்சத்து நிறைந்த fermented rice (பழைய சோறு) மற்றும் தயிர் வழங்கப்படுகிறது.\n• மதிய உணவில் மெஸ் உணவுடன் மோர் மற்றும் நிலக்கடலை சேர்க்கப்படுகிறது.\n• மாலை நேர சிற்றுண்டியாக பொட்டுக்கடலை பயன்படுத்தப்படுகிறது.\n• இரவு உணவில் உடல் மீட்பு மற்றும் வளர்ச்சிக்காக முட்டை, சோயா சங்ஸ், கோழி மற்றும் இரவு பால் ஆகியவை சேர்த்துக்கொள்ளப்படுகின்றன.",
+        "keyTerms": [
+          {
+            "term": "சமச்சீர் உணவு (Balanced Diet)",
+            "explanation": "உடலின் ஆரோக்கியத்திற்கும் வளர்ச்சிக்கும் தேவையான அனைத்து சத்துக்களையும் சரியான அளவில் வழங்கும் உணவு முறை."
+          },
+          {
+            "term": "புரோபயாடிக் (Probiotics)",
+            "explanation": "செரிமான மண்டலத்தை ஆரோக்கியமாக வைத்திருக்க உதவும் நல்ல பாக்டீரியாக்கள் நிறைந்த உணவுகள் (உதாரணமாக: தயிர், பழைய சோறு)."
+          },
+          {
+            "term": "தாவர புரதம் (Plant Protein)",
+            "explanation": "தாவர மூலங்களிலிருந்து பெறப்படும் புரதச்சத்து, இது உடல் தசைகளின் வளர்ச்சிக்கு உதவுகிறது (உதாரணமாக: பொட்டுக்கடலை, நிலக்கடலை)."
+          }
+        ],
+        "quiz": [
+          {
+            "question": "விடுதி உணவு அட்டவணையின்படி, காலை உணவில் என்ன வழங்கப்படுகிறது?",
+            "options": [
+              "இட்லி மற்றும் சட்னி",
+              "புளி சாதம்",
+              "பழைய சோறு மற்றும் கடை தயிர்",
+              "பிரெட் மற்றும் ஜாம்"
+            ],
+            "correctAnswer": "பழைய சோறு மற்றும் கடை தயிர்",
+            "explanation": "அட்டவணையின்படி, அனைத்து நாட்களிலும் காலை உணவாக 'Fermented Rice + Shop Curd' வழங்கப்படுகிறது."
+          },
+          {
+            "question": "மாலை நேர சிற்றுண்டியாக எந்த உணவு பரிந்துரைக்கப்பட்டுள்ளது?",
+            "options": [
+              "கைப்பிடி பொட்டுக்கடலை",
+              "சிப்ஸ்",
+              "பிஸ்கட்",
+              "பழங்கள் மட்டும்"
+            ],
+            "correctAnswer": "கைப்பிடி பொட்டுக்கடலை",
+            "explanation": "தாவர புரதத்திற்காக மாலை வேளையில் கைப்பிடி பொட்டுக்கடலை உட்கொள்ள பரிந்துரைக்கப்பட்டுள்ளது."
+          },
+          {
+            "question": "இரவு தூங்குவதற்கு முன் எந்த பானம் குடிக்க அட்டவணையில் குறிப்பிடப்பட்டுள்ளது?",
+            "options": [
+              "காபி",
+              "டீ",
+              "இரவு பால் (Night Milk)",
+              "சோடா"
+            ],
+            "correctAnswer": "இரவு பால் (Night Milk)",
+            "explanation": "உடல் மீட்பு மற்றும் வளர்ச்சிக்காக ஒவ்வொரு நாளும் இரவு உணவிற்குப் பிறகு பால் குடிக்க பரிந்துரைக்கப்பட்டுள்ளது."
+          }
+        ]
+      },
+      "language": "Tamil",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T10:30:33.665Z",
+      "updatedAt": "2026-10-30T10:30:33.665Z"
+    },
+    {
+      "_id": "d9btlxsgmvutxny9",
+      "userId": "ixrstbkwmvuqezdc",
+      "featureType": "simplify",
+      "title": "Hostel Diet.txt",
+      "inputData": {
+        "textSnippet": "📅 The Complete Hostel Balanced Diet Chart (With Night Milk)\r\nDay\tMorning Breakfast (Probiotics & Protein)\tAfternoon Lunch (Carbs & Fats)\tEvening Snack (Plant Protein)\tNight Dinner & Bedtime (Recovery & Growth)\r\nMonday\tFermented Rice + Shop Curd (₹12)\tMess Meals + Buttermilk + Handful Peanuts (₹20)\t",
+        "source": "file"
+      },
+      "outputData": {
+        "plainLanguage": "This is a weekly meal plan for hostel students to eat healthy food on a budget. Every morning, you eat fermented rice and curd. For lunch, you eat mess food with peanuts and buttermilk. For dinner, you get healthy foods like eggs, chicken, soya chunks, and a glass of milk before bed.",
+        "keyPoints": [
+          "Follows a balanced diet plan every day of the week.",
+          "Combines affordable hostel mess food with extra healthy items like eggs and milk.",
+          "Includes breakfast, lunch, snacks, and a bedtime meal for daily energy and growth."
+        ],
+        "actionSteps": [
+          "Buy simple extra items like curd, peanuts, and milk to add to your daily meals.",
+          "Keep boiled eggs and a kettle ready in your room for quick preparation.",
+          "Check the weekly schedule so you know what to eat each day."
+        ],
+        "glossary": [
+          {
+            "term": "Fermented Rice",
+            "definition": "Rice that has been soaked in water overnight, which makes it very healthy for your stomach."
+          },
+          {
+            "term": "Probiotics",
+            "definition": "Healthy foods like curd that help keep your stomach and digestion strong."
+          },
+          {
+            "term": "Soya Chunks",
+            "definition": "A plant-based food high in protein that helps your body grow strong."
+          }
+        ],
+        "translation": "ಇದು ಹಾಸ್ಟೆಲ್ ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ ಆರೋಗ್ಯಕರ ಆಹಾರವನ್ನು ತಿನ್ನಲು ವಾರದ ಆಹಾರ ಪಟ್ಟಿಯಾಗಿದೆ. ಪ್ರತಿದಿನ ಬೆಳಿಗ್ಗೆ ನೀವು ಹುದುಗಿಸಿದ ಅನ್ನ ಮತ್ತು ಮೊಸರನ್ನು ತಿನ್ನುತ್ತೀರಿ. ಮಧ್ಯಾಹ್ನ ಕಡಲೆಕಾಯಿ ಮತ್ತು ಮಜ್ಜಿಗೆಯೊಂದಿಗೆ ಮೆಸ್ ಊಟವನ್ನು ಮಾಡಿ. ರಾತ್ರಿಯ ವೇಳೆ ಮಲಗುವ ಮುಂಚೆ ಮೊಟ್ಟೆ, ಕೋಳಿ ಮಾಂಸ, ಸೋಯಾ ಮತ್ತು ಒಂದು ಲೋಕ ಹಾಲನ್ನು ಕುಡಿಯಿರಿ."
+      },
+      "language": "Kannada",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T10:28:47.361Z",
+      "updatedAt": "2026-10-30T10:28:47.361Z"
+    },
+    {
+      "_id": "ff6q3shumvuttyak",
+      "userId": "ixrstbkwmvuqezdc",
+      "featureType": "simplify",
+      "title": "Hostel Diet.txt",
+      "inputData": {
+        "textSnippet": "📅 The Complete Hostel Balanced Diet Chart (With Night Milk)\r\nDay\tMorning Breakfast (Probiotics & Protein)\tAfternoon Lunch (Carbs & Fats)\tEvening Snack (Plant Protein)\tNight Dinner & Bedtime (Recovery & Growth)\r\nMonday\tFermented Rice + Shop Curd (₹12)\tMess Meals + Buttermilk + Handful Peanuts (₹20)\t",
+        "source": "file"
+      },
+      "outputData": {
+        "plainLanguage": "This is a simple weekly food guide for hostel students. It helps you eat healthy and balanced meals every day. It includes breakfast, lunch, evening snacks, and dinner with milk. You can mix cheap, healthy foods like curd, eggs, and peanuts with your regular mess meals.",
+        "keyPoints": [
+          "Eat healthy foods like curd, eggs, and peanuts every day to stay strong.",
+          "Combine your regular hostel mess food with simple items like milk and nuts.",
+          "Follow the daily plan to get the right mix of protein, carbs, and energy."
+        ],
+        "actionSteps": [
+          "Buy simple extra items like curd, peanuts, and bananas to add to your meals.",
+          "Keep a kettle ready in your room to boil eggs and make quick healthy meals.",
+          "Check the weekly food chart every morning to know what to eat."
+        ],
+        "glossary": [
+          {
+            "term": "Probiotics",
+            "definition": "Healthy foods like curd that are good for your stomach."
+          },
+          {
+            "term": "Protein",
+            "definition": "Nutrients found in eggs, chicken, and nuts that help your body grow and stay strong."
+          },
+          {
+            "term": "Carbs",
+            "definition": "Foods like rice that give your body energy."
+          }
+        ],
+        "translation": "இது விடுதியில் தங்கி, படிக்கும் மாணவர்களுக்கான ஒரு எளிமையான உணவு அட்டவணை ஆகும். இது உங்களுக்கு ஒவ்வொரு நாளும் ஆரோக்கியமான மற்றும் சத்தான உணவை உண்ண உதவுகிறது. இதில் காலை உணவு, மண்பகல் உணவு, மாலைச் சிற்றுண்டி மற்றும் இரவு உணவுடன் பால் ஆகியவை அடங்கும். விடுதி உணவோடு தயிர், முட்டை மற்றும் வேர்க்கடலை போன்ற ஆரோக்கியமான உணவுகளை சேர்த்துக்கொள்ளலாம்."
+      },
+      "language": "Tamil",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T10:25:54.140Z",
+      "updatedAt": "2026-10-30T10:25:54.140Z"
+    },
     {
       "_id": "0vncb89mmvustymu",
       "userId": "ixrstbkwmvuqezdc",

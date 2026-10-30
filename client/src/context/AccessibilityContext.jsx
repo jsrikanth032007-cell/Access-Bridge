@@ -1,9 +1,25 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { useAuth } from './AuthContext.jsx';
 import api from '../services/api.js';
 import { playSpeech } from '../services/audioPlayer.js';
 
-const AccessibilityContext = createContext(null);
+const Ctx = createContext(null);
+
+export const useA11y = () => {
+  const context = useContext(Ctx);
+  if (!context) {
+    throw new Error('useA11y must be used within an AccessibilityProvider');
+  }
+  return context;
+};
+
+export const useAccessibility = () => {
+  const context = useContext(Ctx);
+  if (!context) {
+    throw new Error('useAccessibility must be used within an AccessibilityProvider');
+  }
+  return context;
+};
 
 export const ACCESSIBLE_GREETINGS = {
   English:
@@ -26,8 +42,11 @@ export const PAGE_AUDIO_INTRODUCTIONS = {
     '/dashboard': 'Dashboard. Choose Content Simplifier, Image Describer, Voice Assistant, or Lecture Notes.',
     '/simplify': 'Content Simplifier. Paste text, enter URL, or upload PDF to generate plain language, 3 key points, and translations.',
     '/describe-image': 'Image Describer. Upload any diagram or photo to hear detailed scene descriptions, screen-reader alt text, and visible OCR text.',
+    '/image': 'Image Describer. Upload any diagram or photo to hear detailed scene descriptions, screen-reader alt text, and visible OCR text.',
     '/voice-assistant': 'Voice Assistant. Speak your questions hands-free or choose your language to talk with the assistant.',
+    '/voice': 'Voice Assistant. Speak your questions hands-free or choose your language to talk with the assistant.',
     '/lecture-notes': 'Lecture Notes. Convert recorded transcripts into structured summaries and a 3-question learning quiz.',
+    '/lecture': 'Lecture Notes. Convert recorded transcripts into structured summaries and a 3-question learning quiz.',
     '/history': 'Saved History. Review and listen to your past simplifications and image descriptions.',
     '/profile': 'Accessibility Profile. Configure reading level, language, text scaling, and sensory settings.',
   },
@@ -36,8 +55,11 @@ export const PAGE_AUDIO_INTRODUCTIONS = {
     '/dashboard': 'டாஷ்போர்டு. உள்ளடக்க எளிதாக்கி, பட விவரிப்பான், குரல் உதவியாளர் அல்லது விரிவுரை குறிப்புகளைத் தேர்ந்தெடுக்கவும்.',
     '/simplify': 'உள்ளடக்க எளிதாக்கி. எளிய விளக்கம், முக்கிய குறிப்புகள் மற்றும் மொழிபெயர்ப்பு பெற உரையை உள்ளிடவும் அல்லது கோப்பைப் பதிவேற்றவும்.',
     '/describe-image': 'பட விவரிப்பான். படங்களின் விரிவான விளக்கம் மற்றும் உரையை அறிய படத்தைப் பதிவேற்றவும்.',
+    '/image': 'பட விவரிப்பான். படங்களின் விரிவான விளக்கம் மற்றும் உரையை அறிய படத்தைப் பதிவேற்றவும்.',
     '/voice-assistant': 'குரல் உதவியாளர். உங்கள் கேள்விகளைத் தமிழில் பேசி உடனடியாக குரல் வழியே பதில்களைப் பெறலாம்.',
+    '/voice': 'குரல் உதவியாளர். உங்கள் கேள்விகளைத் தமிழில் பேசி உடனடியாக குரல் வழியே பதில்களைப் பெறலாம்.',
     '/lecture-notes': 'விரிவுரை குறிப்புகள். ஆடியோ உரைவடிவத்தை உள்ளிட்டு எளிய சுருக்கம் மற்றும் கற்றல் வினாடி வினாவைப் பெறலாம்.',
+    '/lecture': 'விரிவுரை குறிப்புகள். ஆடியோ உரைவடிவத்தை உள்ளிட்டு எளிய சுருக்கம் மற்றும் கற்றல் வினாடி வினாவைப் பெறலாம்.',
     '/history': 'சேமிக்கப்பட்ட வரலாறு. உங்கள் கடந்த கால முடிவுகளைக் கேட்கவும் மதிப்பாய்வு செய்யவும்.',
     '/profile': 'அணுகல்தன்மை சுயவிவரம். மொழி, எழுத்து அளவு மற்றும் பார்வை அமைப்புகளைத் தனிப்பயனாக்குங்கள்.',
   },
@@ -46,8 +68,11 @@ export const PAGE_AUDIO_INTRODUCTIONS = {
     '/dashboard': 'डैशबोर्ड। कंटेंट सिंपलीफायर, इमेज डिस्क्राइबर, वॉयस असिस्टेंट या लेक्चर नोट्स चुनें।',
     '/simplify': 'कंटेंट सिंपलीफायर। सरल भाषा, मुख्य बिंदु और अनुवाद प्राप्त करने के लिए टेक्स्ट दर्ज करें या पीडीएफ अपलोड करें।',
     '/describe-image': 'इमेज डिस्क्राइबर। विस्तृत दृश्य विवरण और ओसीआर टेक्स्ट सुनने के लिए कोई भी छवि अपलोड करें।',
+    '/image': 'इमेज डिस्क्राइबर। विस्तृत दृश्य विवरण और ओसीआर टेक्स्ट सुनने के लिए कोई भी छवि अपलोड करें।',
     '/voice-assistant': 'वॉयस असिस्टेंट। हैंड्स-फ्री सवाल बोलें और अपनी भाषा में उत्तर सुनें।',
+    '/voice': 'वॉयस असिस्टेंट। हैंड्स-फ्री सवाल बोलें और अपनी भाषा में उत्तर सुनें।',
     '/lecture-notes': 'लेक्चर नोट्स। रिकॉर्ड किए गए प्रतिलेख को संक्षिप्त सारांश और 3-प्रश्नों की क्विज में बदलें।',
+    '/lecture': 'लेक्चर नोट्स। रिकॉर्ड किए गए प्रतिलेख को संक्षिप्त सारांश और 3-प्रश्नों की क्विज में बदलें।',
     '/history': 'सहेजा गया इतिहास। अपने पिछले परिणामों को सुनें और समीक्षा करें।',
     '/profile': 'अभिगम्यता प्रोफ़ाइल। भाषा, फ़ॉन्ट आकार और प्राथमिकताओं को अनुकूलित करें।',
   },
@@ -56,8 +81,11 @@ export const PAGE_AUDIO_INTRODUCTIONS = {
     '/dashboard': 'డ్యాష్‌బోర్డ్. కంటెంట్ సింప్లిఫైయర్, ఇమేజ్ డిస్క్రైబర్, వాయిస్ అసిస్టెంట్ లేదా లెక్చర్ నోట్స్ ఎంచుకోండి.',
     '/simplify': 'కంటెంట్ సింప్లిఫైయర్. సరళమైన భాష, ముఖ్య అంశాలు మరియు అనువాదాల కోసం వచనాన్ని నమోదు చేయండి.',
     '/describe-image': 'ఇమేజ్ డిస్క్రైబర్. వివరణాత్మక దృశ్య సమాచారం మరియు OCR వచనాన్ని వినడానికి చిత్రాన్ని అప్‌లోడ్ చేయండి.',
+    '/image': 'ఇమేజ్ డిస్క్రైబర్. వివరణాత్మక దృశ్య సమాచారం మరియు OCR వచనాన్ని వినడానికి చిత్రాన్ని అప్‌లోడ్ చేయండి.',
     '/voice-assistant': 'వాయిస్ అసిస్టెంట్. మీ ప్రశ్నలను మాట్లాడండి మరియు సహాయకునితో మీ భాషలో మాట్లాడండి.',
+    '/voice': 'వాయిస్ అసిస్టెంట్. మీ ప్రశ్నలను మాట్లాడండి మరియు సహాయకునితో మీ భాషలో మాట్లాడండి.',
     '/lecture-notes': 'లెక్చర్ నోట్స్. ట్రాన్స్‌క్రిప్ట్‌లను నిర్మాణాత్మక సారాంశాలు మరియు 3-ప్రశ్నల క్విజ్‌గా మార్చండి.',
+    '/lecture': 'లెక్చర్ నోట్స్. ట్రాన్స్‌క్రిప్ట్‌లను నిర్మాణాత్మక సారాంశాలు మరియు 3-ప్రశ్నల క్విజ్‌గా మార్చండి.',
     '/history': 'భద్రపరిచిన చరిత్ర. మీ గత ఫలితాలను వినండి మరియు సమీక్షించండి.',
     '/profile': 'యాక్సెసిబిలిటీ ప్రొఫైల్. పఠన స్థాయి, భాష, ఫాంట్ పరిమాణాన్ని సెట్ చేసుకోండి.',
   },
@@ -66,8 +94,11 @@ export const PAGE_AUDIO_INTRODUCTIONS = {
     '/dashboard': 'ഡാഷ്‌ബോർഡ്. കണ്ടന്റ് സിംപ്ലിഫയർ, ഇമേജ് ഡിസ്ക്രൈബർ, വോയ്‌സ് അസിസ്റ്റന്റ് അല്ലെങ്കിൽ ലക്ചർ നോട്സ് തിരഞ്ഞെടുക്കുക.',
     '/simplify': 'കണ്ടന്റ് സിംപ്ലിഫയർ. ലളിതമായ ഭാഷയും വിവർത്തനവും ലഭിക്കാൻ ടെക്സ്റ്റ് നൽകുക അല്ലെങ്കിൽ ഫയൽ അപ്‌ലോഡ് ചെയ്യുക.',
     '/describe-image': 'ഇമേജ് ഡിസ്ക്രൈബർ. വിശദമായ വിവരണവും ചിത്രത്തിലെ ടെക്സ്റ്റും അറിയാൻ ചിത്രം അപ്‌ലോഡ് ചെയ്യുക.',
+    '/image': 'ഇമേജ് ഡിസ്ക്രൈബർ. വിശദമായ വിവരണവും ചിത്രത്തിലെ ടെക്സ്റ്റും അറിയാൻ ചിത്രം അപ്‌ലോഡ് ചെയ്യുക.',
     '/voice-assistant': 'വോയ്‌സ് അസിസ്റ്റന്റ്. സംശയങ്ങൾ ചോദിക്കാനും ഓഡിയോയിൽ ഉത്തരം കേൾക്കാനും മൈക്ക് ഉപയോഗിക്കുക.',
+    '/voice': 'വോയ്‌സ് അസിസ്റ്റന്റ്. സംശയങ്ങൾ ചോദിക്കാനും ഓഡിയോയിൽ ഉത്തരം കേൾക്കാനും മൈക്ക് ഉപയോഗിക്കുക.',
     '/lecture-notes': 'ലക്ചർ നോട്സ്. റെക്കോർഡിംഗ് വിവരങ്ങൾ ലളിതമായ സംഗ്രഹവും ക്വിസുമാക്കി മാറ്റുക.',
+    '/lecture': 'ലക്ചർ നോട്സ്. റെക്കോർഡിംഗ് വിവരങ്ങൾ ലളിതമായ സംഗ്രഹവും ക്വിസുമാക്കി മാറ്റുക.',
     '/history': 'സേവ് ചെയ്ത ചരിത്രം. മുൻ ഫലങ്ങൾ കേൾക്കുകയും പരിശോധിക്കുകയും ചെയ്യുക.',
     '/profile': 'ആക്സസിബിലിറ്റി പ്രൊഫൈൽ. ഭാഷയും ഫോണ്ട് വലുപ്പവും ആവശ്യാനുസരണം മാറ്റുക.',
   },
@@ -76,41 +107,52 @@ export const PAGE_AUDIO_INTRODUCTIONS = {
     '/dashboard': 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್. ವಿಷಯ ಸರಳೀಕಾರಕ, ಚಿತ್ರ ವಿವರಣೆ, ಧ್ವನಿ ಸಹಾಯಕ ಅಥವಾ ಉಪನ್ಯಾಸ ಟಿಪ್ಪಣಿಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ.',
     '/simplify': 'ವಿಷಯ ಸರಳೀಕಾರಕ. ಸರಳ ವಿವರಣೆ ಮತ್ತು ಅನುವಾದ ಪಡೆಯಲು ಪಠ್ಯವನ್ನು ನಮೂದಿಸಿ ಅಥವಾ ಫೈಲ್ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.',
     '/describe-image': 'ಚಿತ್ರ ವಿವರಣೆ. ಚಿತ್ರದ ವಿವರ ಮತ್ತು ಪಠ್ಯವನ್ನು ಕೇಳಲು ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.',
+    '/image': 'ಚಿತ್ರ ವಿವರಣೆ. ಚಿತ್ರದ ವಿವರ ಮತ್ತು ಪಠ್ಯವನ್ನು ಕೇಳಲು ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.',
     '/voice-assistant': 'ಧ್ವನಿ ಸಹಾಯಕ. ನಿಮ್ಮ ಪ್ರಶ್ನೆಗಳನ್ನು ಮಾತನಾಡಿ ಮತ್ತು ಉತ್ತರವನ್ನು ಆಲಿಸಿ.',
+    '/voice': 'ಧ್ವನಿ ಸಹಾಯಕ. ನಿಮ್ಮ ಪ್ರಶ್ನೆಗಳನ್ನು ಮಾತನಾಡಿ ಮತ್ತು ಉತ್ತರವನ್ನು ಆಲಿಸಿ.',
     '/lecture-notes': 'ಉಪನ್ಯಾಸ ಟಿಪ್ಪಣಿಗಳು. ಪ್ರತಿಲಿಪಿಯನ್ನು ಸರಳ ಸಾರಾಂಶ ಮತ್ತು ರಸಪ್ರಶ್ನೆಯಾಗಿ ಪರಿವರ್ತಿಸಿ.',
+    '/lecture': 'ಉಪನ್ಯಾಸ ಟಿಪ್ಪಣಿಗಳು. ಪ್ರತಿಲಿಪಿಯನ್ನು ಸರಳ ಸಾರಾಂಶ ಮತ್ತು ರಸಪ್ರಶ್ನೆಯಾಗಿ ಪರಿವರ್ತಿಸಿ.',
     '/history': 'ಉಳಿಸಿದ ಇತಿಹಾಸ. ನಿಮ್ಮ ಹಿಂದಿನ ಫಲಿತಾಂಶಗಳನ್ನು ಆಲಿಸಿ ಮತ್ತು ಪರಿಶೀಲಿಸಿ.',
     '/profile': 'ಪ್ರವೇಶಿಸುವಿಕೆ ಪ್ರೊಫೈಲ್. ಓದುವ ಮಟ್ಟ, ಭಾಷೆ ಮತ್ತು ಫಾಂಟ್ ಗಾತ್ರವನ್ನು ಹೊಂದಿಸಿ.',
   },
 };
 
-const DEFAULT_SETTINGS = {
-  disabilityTypes: [],
+const DEFAULT_STATE = {
+  size: 16,
+  contrast: false,
+  dyslexia: false,
+  reduceMotion: false,
   preferredLanguage: 'English',
   readingLevel: 'Simple',
-  fontSize: 'medium', // 'small' | 'medium' | 'large' | 'xlarge'
-  dyslexiaFont: false,
-  highContrast: false,
-  reducedMotion: false,
   autoReadAloud: false,
   blindAccessibilityMode: false,
+  disabilityTypes: [],
 };
 
-const FONT_SCALES = {
-  small: '0.9rem',
-  medium: '1.05rem',
-  large: '1.25rem',
-  xlarge: '1.45rem',
-};
-
-const LINE_HEIGHT_SCALES = {
-  small: '1.5',
-  medium: '1.65',
-  large: '1.8',
-  xlarge: '2.0',
-};
-
-export const AccessibilityProvider = ({ children }) => {
+export function AccessibilityProvider({ children }) {
   const { profile, isAuthenticated, updateProfileLocally } = useAuth();
+
+  const [s, setS] = useState(() => {
+    try {
+      const a11y = localStorage.getItem('a11y');
+      if (a11y) return { ...DEFAULT_STATE, ...JSON.parse(a11y) };
+      const legacy = localStorage.getItem('accessbridge_a11y');
+      if (legacy) {
+        const parsed = JSON.parse(legacy);
+        return {
+          ...DEFAULT_STATE,
+          ...parsed,
+          size: parsed.fontSize === 'small' ? 14 : parsed.fontSize === 'large' ? 18 : parsed.fontSize === 'xlarge' ? 22 : 16,
+          contrast: Boolean(parsed.highContrast),
+          dyslexia: Boolean(parsed.dyslexiaFont),
+          reduceMotion: Boolean(parsed.reducedMotion),
+        };
+      }
+      return DEFAULT_STATE;
+    } catch {
+      return DEFAULT_STATE;
+    }
+  });
 
   const [hasSpokenApproval, setHasSpokenApproval] = useState(() => {
     return localStorage.getItem('accessbridge_audio_approved') === 'true';
@@ -120,108 +162,79 @@ export const AccessibilityProvider = ({ children }) => {
     return localStorage.getItem('accessbridge_audio_approved') !== 'true';
   });
 
-  const [settings, setSettings] = useState(() => {
-    try {
-      const saved = localStorage.getItem('accessbridge_a11y');
-      return saved ? { ...DEFAULT_SETTINGS, ...JSON.parse(saved) } : DEFAULT_SETTINGS;
-    } catch {
-      return DEFAULT_SETTINGS;
-    }
-  });
+  // Apply DOM attributes instantly without layout thrashing
+  useEffect(() => {
+    const r = document.documentElement;
+    r.style.setProperty('--fs', `${s.size}px`);
+    r.dataset.theme = s.contrast ? 'contrast' : 'light';
+    r.dataset.font = s.dyslexia ? 'dyslexia' : 'default';
+    r.dataset.motion = s.reduceMotion ? 'reduce' : 'normal';
+
+    localStorage.setItem('a11y', JSON.stringify(s));
+    localStorage.setItem(
+      'accessbridge_a11y',
+      JSON.stringify({
+        ...s,
+        highContrast: s.contrast,
+        dyslexiaFont: s.dyslexia,
+        reducedMotion: s.reduceMotion,
+        fontSize: s.size <= 14 ? 'small' : s.size >= 22 ? 'xlarge' : s.size >= 18 ? 'large' : 'medium',
+      })
+    );
+  }, [s]);
 
   // Sync profile when user logs in
   useEffect(() => {
     if (profile) {
-      setSettings((prev) => {
-        const merged = { ...prev, ...profile };
-        localStorage.setItem('accessbridge_a11y', JSON.stringify(merged));
-        return merged;
-      });
+      setS((prev) => ({
+        ...prev,
+        preferredLanguage: profile.preferredLanguage || prev.preferredLanguage,
+        readingLevel: profile.readingLevel || prev.readingLevel,
+        contrast: profile.highContrast !== undefined ? profile.highContrast : prev.contrast,
+        dyslexia: profile.dyslexiaFont !== undefined ? profile.dyslexiaFont : prev.dyslexia,
+        reduceMotion: profile.reducedMotion !== undefined ? profile.reducedMotion : prev.reduceMotion,
+        autoReadAloud: profile.autoReadAloud !== undefined ? profile.autoReadAloud : prev.autoReadAloud,
+        blindAccessibilityMode: profile.blindAccessibilityMode !== undefined ? profile.blindAccessibilityMode : prev.blindAccessibilityMode,
+        size: profile.fontSize === 'small' ? 14 : profile.fontSize === 'large' ? 18 : profile.fontSize === 'xlarge' ? 22 : prev.size,
+      }));
     }
   }, [profile]);
 
-  // Apply DOM modifications dynamically whenever settings change
-  useEffect(() => {
-    const root = document.documentElement;
-    const body = document.body;
-
-    // Apply font size scale
-    const scale = FONT_SCALES[settings.fontSize] || FONT_SCALES.medium;
-    const lineHeight = LINE_HEIGHT_SCALES[settings.fontSize] || LINE_HEIGHT_SCALES.medium;
-    root.style.setProperty('--text-scale', scale);
-    root.style.setProperty('--line-height-scale', lineHeight);
-
-    // Dyslexia-friendly font class
-    if (settings.dyslexiaFont) {
-      body.classList.add('font-dyslexic');
-    } else {
-      body.classList.remove('font-dyslexic');
-    }
-
-    // High-contrast theme class
-    if (settings.highContrast) {
-      body.classList.add('high-contrast');
-      root.classList.add('dark');
-    } else {
-      body.classList.remove('high-contrast');
-      root.classList.remove('dark');
-    }
-
-    // Reduced-motion class
-    if (settings.reducedMotion) {
-      body.classList.add('reduced-motion');
-    } else {
-      body.classList.remove('reduced-motion');
-    }
-  }, [settings]);
+  // Quick update method for UI kit
+  const update = useCallback((patch) => {
+    setS((prev) => ({ ...prev, ...patch }));
+  }, []);
 
   // Universal Multilingual Speech Helper
   const speakText = useCallback((text, langName = 'English') => {
     playSpeech(text, langName);
   }, []);
 
-  // Approves speech for blind person / user device
-  const approveDeviceAccessibility = useCallback(
-    (langOverride) => {
-      const targetLang = langOverride || settings.preferredLanguage || 'English';
-      localStorage.setItem('accessbridge_audio_approved', 'true');
-      setHasSpokenApproval(true);
-      setShowApprovalModal(false);
-
-      // Enable auto read-aloud and blind accessibility mode
-      setSettings((prev) => {
-        const updated = {
-          ...prev,
-          autoReadAloud: true,
-          blindAccessibilityMode: true,
-          preferredLanguage: targetLang,
-        };
-        localStorage.setItem('accessbridge_a11y', JSON.stringify(updated));
-        return updated;
-      });
-
-      // Play immediate spoken greeting in the chosen language
-      const greeting = ACCESSIBLE_GREETINGS[targetLang] || ACCESSIBLE_GREETINGS.English;
-      setTimeout(() => {
-        speakText(greeting, targetLang);
-      }, 100);
-    },
-    [settings.preferredLanguage, speakText]
-  );
-
-  // Update preferences and sync with backend if logged in
+  // Update preferences and sync with backend if authenticated
   const updateSettings = useCallback(
     async (partialSettings) => {
-      setSettings((prev) => {
-        const updated = { ...prev, ...partialSettings };
-        localStorage.setItem('accessbridge_a11y', JSON.stringify(updated));
-        return updated;
-      });
+      const patch = {};
+      if (partialSettings.highContrast !== undefined) patch.contrast = partialSettings.highContrast;
+      if (partialSettings.contrast !== undefined) patch.contrast = partialSettings.contrast;
+      if (partialSettings.dyslexiaFont !== undefined) patch.dyslexia = partialSettings.dyslexiaFont;
+      if (partialSettings.dyslexia !== undefined) patch.dyslexia = partialSettings.dyslexia;
+      if (partialSettings.reducedMotion !== undefined) patch.reduceMotion = partialSettings.reducedMotion;
+      if (partialSettings.reduceMotion !== undefined) patch.reduceMotion = partialSettings.reduceMotion;
+      if (partialSettings.size !== undefined) patch.size = partialSettings.size;
+      if (partialSettings.fontSize !== undefined) {
+        patch.size = partialSettings.fontSize === 'small' ? 14 : partialSettings.fontSize === 'large' ? 18 : partialSettings.fontSize === 'xlarge' ? 22 : 16;
+      }
+      if (partialSettings.preferredLanguage) patch.preferredLanguage = partialSettings.preferredLanguage;
+      if (partialSettings.readingLevel) patch.readingLevel = partialSettings.readingLevel;
+      if (partialSettings.autoReadAloud !== undefined) patch.autoReadAloud = partialSettings.autoReadAloud;
+      if (partialSettings.blindAccessibilityMode !== undefined) patch.blindAccessibilityMode = partialSettings.blindAccessibilityMode;
+
+      setS((prev) => ({ ...prev, ...patch, ...partialSettings }));
 
       if (isAuthenticated) {
         try {
-          const res = await api.put('/profile', partialSettings);
-          if (res.data.success && res.data.profile) {
+          const res = await api.put('/profile', { ...partialSettings, ...patch });
+          if (res.data?.success && res.data.profile) {
             updateProfileLocally(res.data.profile);
           }
         } catch (error) {
@@ -232,33 +245,61 @@ export const AccessibilityProvider = ({ children }) => {
     [isAuthenticated, updateProfileLocally]
   );
 
-  // Quick toggle helpers
-  const toggleDyslexiaFont = () => updateSettings({ dyslexiaFont: !settings.dyslexiaFont });
-  const toggleHighContrast = () => updateSettings({ highContrast: !settings.highContrast });
+  const toggleDyslexiaFont = () => update({ dyslexia: !s.dyslexia });
+  const toggleHighContrast = () => update({ contrast: !s.contrast });
   const cycleFontSize = () => {
-    const sizes = ['small', 'medium', 'large', 'xlarge'];
-    const nextIdx = (sizes.indexOf(settings.fontSize) + 1) % sizes.length;
-    updateSettings({ fontSize: sizes[nextIdx] });
+    const nextSize = s.size >= 24 ? 14 : s.size + 2;
+    update({ size: nextSize });
   };
   const setPreferredLanguage = (lang) => {
-    updateSettings({ preferredLanguage: lang });
-    // Announce language change aloud in the selected language
+    update({ preferredLanguage: lang });
     const langChangeNotices = {
-      English: `Language set to English`,
-      Tamil: `மொழி தமிழுக்கு மாற்றப்பட்டது`,
-      Hindi: `भाषा हिन्दी में बदल दी गई है`,
-      Telugu: `భాష తెలుగుకి మార్చబడింది`,
-      Malayalam: `ഭാഷ മലയാളത്തിലേക്ക് മാറ്റി`,
-      Kannada: `ಭಾಷೆಯನ್ನು ಕನ್ನಡಕ್ಕೆ ಬದಲಾಯಿಸಲಾಗಿದೆ`,
+      English: 'Language set to English',
+      Tamil: 'மொழி தமிழுக்கு மாற்றப்பட்டது',
+      Hindi: 'भाषा हिन्दी में बदल दी गई है',
+      Telugu: 'భాష తెలుగుకి మార్చబడింది',
+      Malayalam: 'ഭാഷ മലയാളത്തിലേക്ക് മാറ്റി',
+      Kannada: 'ಭಾಷೆಯನ್ನು ಕನ್ನಡಕ್ಕೆ ಬದಲಾಯಿಸಲಾಗಿದೆ',
     };
-    const notice = langChangeNotices[lang] || `Language set to ${lang}`;
-    speakText(notice, lang);
+    speakText(langChangeNotices[lang] || `Language set to ${lang}`, lang);
   };
-  const setReadingLevel = (level) => updateSettings({ readingLevel: level });
+  const setReadingLevel = (level) => update({ readingLevel: level });
+
+  const approveDeviceAccessibility = useCallback(
+    (langOverride) => {
+      const targetLang = langOverride || s.preferredLanguage || 'English';
+      localStorage.setItem('accessbridge_audio_approved', 'true');
+      setHasSpokenApproval(true);
+      setShowApprovalModal(false);
+
+      update({
+        autoReadAloud: true,
+        blindAccessibilityMode: true,
+        preferredLanguage: targetLang,
+      });
+
+      const greeting = ACCESSIBLE_GREETINGS[targetLang] || ACCESSIBLE_GREETINGS.English;
+      setTimeout(() => {
+        speakText(greeting, targetLang);
+      }, 100);
+    },
+    [s.preferredLanguage, speakText, update]
+  );
+
+  // Backward-compatible settings object
+  const settings = {
+    ...s,
+    highContrast: s.contrast,
+    dyslexiaFont: s.dyslexia,
+    reducedMotion: s.reduceMotion,
+    fontSize: s.size <= 14 ? 'small' : s.size >= 22 ? 'xlarge' : s.size >= 18 ? 'large' : 'medium',
+  };
 
   return (
-    <AccessibilityContext.Provider
+    <Ctx.Provider
       value={{
+        s,
+        update,
         settings,
         updateSettings,
         toggleDyslexiaFont,
@@ -274,16 +315,8 @@ export const AccessibilityProvider = ({ children }) => {
       }}
     >
       {children}
-    </AccessibilityContext.Provider>
+    </Ctx.Provider>
   );
-};
+}
 
-export const useAccessibility = () => {
-  const context = useContext(AccessibilityContext);
-  if (!context) {
-    throw new Error('useAccessibility must be used within an AccessibilityProvider');
-  }
-  return context;
-};
-
-export default AccessibilityContext;
+export default Ctx;

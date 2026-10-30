@@ -1,11 +1,21 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.jsx';
-import { LogIn, Sparkles, AlertCircle, ArrowRight } from 'lucide-react';
-import LoadingSpinner from '../components/LoadingSpinner.jsx';
+import { useAuth } from '../context/AuthContext';
+import { useA11y } from '../context/AccessibilityContext';
+import {
+  LogIn,
+  AlertTriangle,
+  ArrowRight,
+  Accessibility,
+  Contrast,
+  Type,
+  Loader2,
+  Sparkles,
+} from 'lucide-react';
 
 export default function Login() {
   const { login } = useAuth();
+  const { s, update } = useA11y();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -45,120 +55,184 @@ export default function Login() {
   };
 
   return (
-    <main
-      id="main-content"
-      tabIndex="-1"
-      className="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 focus:outline-none"
-    >
-      <div className="max-w-md w-full space-y-8 bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-md border border-slate-200 dark:border-slate-800">
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 bg-brand-600 rounded-xl mx-auto flex items-center justify-center text-white shadow-sm">
-            <LogIn className="w-6 h-6" aria-hidden="true" />
-          </div>
-          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">
-            Welcome to AccessBridge
-          </h1>
-          <p className="text-sm text-slate-600 dark:text-slate-400">
-            Sign in to access your assistive features and accessibility profile
-          </p>
-        </div>
+    <div className="min-h-screen bg-surface flex flex-col justify-between">
+      {/* Top Bar with Logo & Quick Accessibility Toolbar */}
+      <header className="flex items-center justify-between border-b border-line bg-card/90 px-4 py-3 backdrop-blur lg:px-8">
+        <Link
+          to="/"
+          className="flex items-center gap-2.5 rounded-xl p-1.5 focus-visible:outline-none"
+          aria-label="AccessBridge Home"
+        >
+          <span className="grid h-10 w-10 place-items-center rounded-xl bg-brand-700 text-white shadow-soft">
+            <Accessibility size={22} aria-hidden="true" />
+          </span>
+          <span className="text-xl font-bold text-ink">AccessBridge</span>
+        </Link>
 
-        {/* Quick Demo Credentials Fill Button */}
-        <div className="p-3 bg-brand-50 dark:bg-brand-950/60 rounded-xl border border-brand-200 dark:border-brand-800 flex items-center justify-between gap-2">
-          <div className="text-xs text-brand-900 dark:text-brand-300">
-            <span className="font-bold">Evaluation Demo Account</span>
-            <p className="text-slate-600 dark:text-slate-400">demo@accessbridge.org</p>
-          </div>
+        {/* Quick Accessibility Controls */}
+        <div
+          role="toolbar"
+          aria-label="Accessibility quick controls"
+          className="flex items-center gap-2"
+        >
           <button
             type="button"
-            onClick={handleFillDemo}
-            className="px-3 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow-sm transition-colors"
-            aria-label="Auto-fill demo credentials"
+            className="btn-ghost !min-h-[44px] !px-3"
+            aria-label="Decrease text size"
+            onClick={() => update({ size: Math.max(14, s.size - 2) })}
           >
-            Fill Demo
+            <Type size={14} aria-hidden="true" />
           </button>
-        </div>
-
-        {/* Error message */}
-        {error && (
-          <div
-            role="alert"
-            aria-live="polite"
-            className="p-3 rounded-lg bg-rose-50 dark:bg-rose-950/50 border border-rose-300 dark:border-rose-800 text-rose-800 dark:text-rose-200 text-sm flex items-start gap-2"
-          >
-            <AlertCircle className="w-5 h-5 flex-shrink-0 text-rose-600" aria-hidden="true" />
-            <span>{error}</span>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1"
-            >
-              Email Address <span className="text-rose-600">*</span>
-            </label>
-            <input
-              id="email"
-              type="email"
-              autoComplete="email"
-              required
-              aria-required="true"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm transition-colors text-base"
-              placeholder="you@example.com"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1"
-            >
-              Password <span className="text-rose-600">*</span>
-            </label>
-            <input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              aria-required="true"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm transition-colors text-base"
-              placeholder="••••••••"
-            />
-          </div>
-
           <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full py-3 px-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-base shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+            type="button"
+            className="btn-ghost !min-h-[44px] !px-3"
+            aria-label="Increase text size"
+            onClick={() => update({ size: Math.min(24, s.size + 2) })}
           >
-            {isSubmitting ? (
-              <LoadingSpinner message="Signing in..." size="sm" />
-            ) : (
-              <>
-                <span>Sign In</span>
-                <ArrowRight className="w-4 h-4" aria-hidden="true" />
-              </>
-            )}
+            <Type size={20} aria-hidden="true" />
           </button>
-        </form>
-
-        <div className="text-center text-sm text-slate-600 dark:text-slate-400">
-          <span>Don't have an account yet? </span>
-          <Link
-            to="/register"
-            className="font-bold text-brand-600 dark:text-brand-400 hover:underline"
+          <button
+            type="button"
+            className={`btn-ghost !min-h-[44px] !px-3 ${
+              s.contrast ? 'bg-brand-100 text-brand-700 font-bold' : ''
+            }`}
+            aria-pressed={s.contrast}
+            aria-label="Toggle high contrast"
+            onClick={() => update({ contrast: !s.contrast })}
           >
-            Create account
-          </Link>
+            <Contrast size={18} aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            className={`btn-ghost !min-h-[44px] hidden sm:inline-flex text-xs font-semibold ${
+              s.dyslexia ? 'bg-brand-100 text-brand-700 font-bold' : ''
+            }`}
+            aria-pressed={s.dyslexia}
+            aria-label="Toggle dyslexia readable font"
+            onClick={() => update({ dyslexia: !s.dyslexia })}
+          >
+            Dyslexia font
+          </button>
         </div>
-      </div>
-    </main>
+      </header>
+
+      {/* Main Content Area */}
+      <main
+        id="main"
+        tabIndex={-1}
+        className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 focus:outline-none"
+      >
+        <div className="card max-w-md w-full space-y-6">
+          <div className="text-center space-y-2">
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-brand-700 text-white mx-auto shadow-soft">
+              <LogIn size={24} aria-hidden="true" />
+            </span>
+            <h1 className="text-2xl font-extrabold text-ink tracking-tight">
+              Sign In to AccessBridge
+            </h1>
+            <p className="text-sm text-muted">
+              Access your personalized reading settings, voice assistant, and saved history.
+            </p>
+          </div>
+
+          {/* Quick Demo Credentials Fill Button */}
+          <div className="p-3.5 rounded-xl bg-surface border border-line flex items-center justify-between gap-3">
+            <div>
+              <span className="font-bold text-xs text-brand-700 block">Judges Evaluation Account</span>
+              <p className="text-xs text-muted">demo@accessbridge.org</p>
+            </div>
+            <button
+              type="button"
+              onClick={handleFillDemo}
+              className="btn-ghost !min-h-[38px] !px-3 text-xs font-semibold text-brand-700 hover:bg-brand-100"
+              aria-label="Auto-fill demo credentials"
+            >
+              Fill Demo
+            </button>
+          </div>
+
+          {/* Error message */}
+          {error && (
+            <div
+              role="alert"
+              className="flex items-start gap-2.5 p-3 rounded-xl border border-rose-300 bg-rose-50 text-rose-900 text-sm"
+            >
+              <AlertTriangle size={18} className="text-rose-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+              <span>{error}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-xs font-bold uppercase text-muted mb-1.5"
+              >
+                Email Address
+              </label>
+              <input
+                id="email"
+                type="email"
+                autoComplete="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="input focus:outline-none"
+                placeholder="you@example.com"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-xs font-bold uppercase text-muted mb-1.5"
+              >
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="input focus:outline-none"
+                placeholder="••••••••"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="btn-primary w-full !min-h-[48px] text-base"
+            >
+              {isSubmitting ? (
+                <Loader2 className="animate-spin" size={20} aria-hidden="true" />
+              ) : (
+                <>
+                  <span>Sign In</span>
+                  <ArrowRight size={18} aria-hidden="true" />
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className="text-center text-sm text-muted pt-2 border-t border-line">
+            <span>Don't have an account yet? </span>
+            <Link
+              to="/register"
+              className="font-bold text-brand-700 hover:underline"
+            >
+              Create account
+            </Link>
+          </div>
+        </div>
+      </main>
+
+      {/* Accessible Footer */}
+      <footer className="border-t border-line bg-card py-4 text-center text-xs text-muted">
+        © 2026 AccessBridge. Built for Universal Accessibility.
+      </footer>
+    </div>
   );
 }
-

@@ -1,105 +1,119 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@400;500;600&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --text-scale: 1rem;
-    --line-height-scale: 1.6;
-    --letter-spacing-scale: normal;
-  }
+:root {
+  --font-body: "Inter";
+  --fs: 16px;
 
-  body {
-    font-size: var(--text-scale);
-    line-height: var(--line-height-scale);
-    letter-spacing: var(--letter-spacing-scale);
-  }
+  /* Luxury Imperial Emerald & Cashmere Palette */
+  --brand-50: 245 250 247;   /* #F5FAF7 - Cashmere silk mist */
+  --brand-100: 228 244 236;  /* #E4F4EC - Frosted jade shimmer */
+  --brand-600: 14 104 81;    /* #0E6851 - Rich lustrous jewel emerald */
+  --brand-700: 9 72 56;      /* #094838 - Deep imperial emerald (WCAG AAA ~8.1:1 on white) */
 
-  /* Accessible focus indicators WCAG 2.4.7 */
-  *:focus-visible {
-    outline: 3px solid #0c87eb !important;
-    outline-offset: 3px !important;
-    border-radius: 4px;
-  }
+  /* Warm Alabaster Parchment & Diamond White */
+  --surface: 250 249 246;    /* #FAF9F6 - Warm luxury alabaster */
+  --card: 255 255 255;       /* #FFFFFF - Brilliant pearl white */
+  --ink: 24 23 22;           /* #181716 - Deep warm carbon obsidian */
+  --muted: 115 110 104;      /* #736E68 - Brushed warm stone slate */
+  --line: 231 226 218;       /* #E7E2DA - Fine warm champagne/linen hairline */
+
+  /* Gilded Gold Accents */
+  --gold-50: 255 251 235;
+  --gold-100: 254 243 199;
+  --gold-500: 217 119 6;
+  --gold-600: 180 83 9;
 }
 
-/* Dyslexia-Friendly Mode */
-body.font-dyslexic,
-.font-dyslexia {
-  font-family: 'Lexend', 'Comic Sans MS', sans-serif !important;
-  line-height: 1.8 !important;
-  letter-spacing: 0.05em !important;
-  word-spacing: 0.1em !important;
+/* High-contrast luxury theme (Black Velvet Obsidian & Gilded Imperial Gold) */
+html[data-theme="contrast"] {
+  --brand-50: 0 0 0;
+  --brand-100: 24 24 24;
+  --brand-600: 255 215 0;    /* #FFD700 Radiant Imperial Gold */
+  --brand-700: 255 224 51;   /* #FFE033 */
+  --surface: 0 0 0;
+  --card: 12 12 12;
+  --ink: 255 255 255;
+  --muted: 232 232 232;
+  --line: 255 215 0;         /* Fine gilded borders */
 }
 
-/* High Contrast Mode */
-body.high-contrast,
-.high-contrast-mode {
-  background-color: #000000 !important;
-  color: #ffffff !important;
+html[data-font="dyslexia"] {
+  --font-body: "Lexend";
 }
 
-body.high-contrast *:focus-visible,
-.high-contrast-mode *:focus-visible {
-  outline: 4px solid #fff000 !important;
+html[data-font="dyslexia"] body {
+  letter-spacing: 0.03em;
+  word-spacing: 0.12em;
+  line-height: 1.8;
+}
+
+html {
+  font-size: var(--fs);
+}
+
+body {
+  @apply bg-surface text-ink font-sans antialiased;
+}
+
+/* Strong, visible luxury focus ring for keyboard users */
+:focus-visible {
+  outline: 3px solid rgb(var(--brand-600)) !important;
   outline-offset: 3px !important;
+  border-radius: 8px !important;
 }
 
-body.high-contrast .bg-white,
-body.high-contrast .bg-slate-50,
-body.high-contrast .bg-slate-100,
-body.high-contrast .bg-slate-800,
-body.high-contrast .bg-slate-900 {
-  background-color: #000000 !important;
-  color: #ffffff !important;
-  border-color: #ffff00 !important;
+html[data-motion="reduce"] *,
+html[data-motion="reduce"] *::before,
+html[data-motion="reduce"] *::after {
+  animation: none !important;
+  transition: none !important;
 }
 
-body.high-contrast a,
-body.high-contrast button {
-  border-color: #ffff00 !important;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
-body.high-contrast a:hover,
-body.high-contrast button:hover {
-  background-color: #ffff00 !important;
-  color: #000000 !important;
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold transition-all duration-200 min-h-[44px];
+  }
+  .btn-primary {
+    @apply btn bg-brand-700 text-white hover:bg-brand-600 shadow-soft active:scale-[0.99];
+  }
+  .btn-ghost {
+    @apply btn border border-line bg-card text-ink hover:bg-brand-50 hover:border-brand-600/30 active:scale-[0.99];
+  }
+  .card {
+    @apply rounded-2xl border border-line bg-card p-6 shadow-soft transition-all duration-200;
+  }
+  .input {
+    @apply w-full rounded-xl border border-line bg-card px-4 py-3 text-ink placeholder:text-muted transition-colors focus:border-brand-600;
+  }
 }
 
-body.high-contrast .text-slate-600,
-body.high-contrast .text-slate-500,
-body.high-contrast .text-slate-700,
-body.high-contrast .text-gray-600 {
-  color: #f1f5f9 !important;
+html[data-theme="contrast"] .btn-primary {
+  color: #000000;
+  background-color: #ffd700;
+  border: 1px solid #ffffff;
 }
 
-/* Reduced Motion Mode */
-body.reduced-motion *,
-.reduced-motion-mode * {
-  animation-duration: 0.001ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.001ms !important;
-  scroll-behavior: auto !important;
-}
-
-/* Skip link */
-.skip-to-content-link {
-  position: absolute;
-  top: -9999px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #000000;
+html[data-theme="contrast"] .btn-ghost {
+  border-color: #ffd700;
   color: #ffffff;
-  padding: 0.75rem 1.5rem;
-  z-index: 9999;
-  border: 2px solid #fff000;
-  font-weight: 700;
-  border-radius: 0 0 8px 8px;
-  text-decoration: underline;
-  transition: top 0.1s ease;
 }
 
-.skip-to-content-link:focus {
-  top: 0;
+html[data-theme="contrast"] .card {
+  border-color: #ffd700;
 }
 
+html[data-theme="contrast"] .input {
+  border-color: #ffd700;
+}
