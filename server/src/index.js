@@ -4,12 +4,12 @@ import { connectDB } from './config/db.js';
 
 const PORT = env.PORT || 5000;
 
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`=======================================================`);
   console.log(` AccessBridge Backend Server Running!`);
   console.log(` Port: ${PORT}`);
   console.log(` Environment: ${env.NODE_ENV}`);
-  console.log(` Health check: http://localhost:${PORT}/api/health`);
+  console.log(` Health check: http://0.0.0.0:${PORT}/api/health`);
   console.log(` Auth endpoints: /api/auth/register, /api/auth/login`);
   console.log(`=======================================================`);
 });

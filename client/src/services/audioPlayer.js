@@ -129,7 +129,10 @@ export async function playSpeech(text, language = 'English') {
   if (!cleaned) return;
 
   // Endpoint streamed from backend using environment or fallback
-  const apiBase = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '');
+  const rawBase = import.meta.env.VITE_API_URL || '/api';
+  const apiBase = rawBase.endsWith('/api')
+    ? rawBase
+    : `${rawBase.replace(/\/+$/, '')}/api`;
   const url = `${apiBase}/ai/tts?lang=${encodeURIComponent(language)}&text=${encodeURIComponent(cleaned)}`;
 
   try {
