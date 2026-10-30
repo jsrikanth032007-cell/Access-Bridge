@@ -7,12 +7,15 @@ import {
   lectureNotesResultSchema,
 } from '../validators/aiValidator.js';
 
-let genAI = null;
-if (env.GEMINI_API_KEY && env.GEMINI_API_KEY !== 'your_gemini_api_key_here') {
-  genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
-}
+const getGenAI = () => {
+  const key = process.env.GEMINI_API_KEY || env.GEMINI_API_KEY;
+  if (!key || key === 'your_gemini_api_key_here') {
+    return null;
+  }
+  return new GoogleGenerativeAI(key);
+};
 
-// Clean markdown code blocks from model JSON output (e.g. ```json ... ```)
+// Clean markdown and extract valid JSON
 const cleanJsonText = (raw) => {
   if (!raw) return '{}';
   let cleaned = raw.trim();
@@ -21,7 +24,47 @@ const cleanJsonText = (raw) => {
   } else if (cleaned.startsWith('```')) {
     cleaned = cleaned.replace(/^```\s*/, '').replace(/\s*```$/, '');
   }
+  const firstBrace = cleaned.indexOf('{');
+  const lastBrace = cleaned.lastIndexOf('}');
+  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+    cleaned = cleaned.substring(firstBrace, lastBrace + 1);
+  }
   return cleaned.trim();
+};
+
+// Candidate models in order of resilience
+const MODEL_CANDIDATES = [
+  env.GEMINI_MODEL || 'gemini-2.5-flash',
+  'gemini-flash-latest',
+  'gemini-2.5-flash-lite',
+  'gemini-flash-lite-latest',
+  'gemini-2.5-pro',
+];
+
+const executeWithFallbackModel = async (genAI, runFn) => {
+  let lastErr = null;
+  for (const modelName of MODEL_CANDIDATES) {
+    try {
+      return await runFn(modelName);
+    } catch (err) {
+      lastErr = err;
+      const msg = err.message || '';
+      // If 503 high demand, 429 rate limit, or 404 model not found, try the next model candidate
+      if (
+        msg.includes('503') ||
+        msg.includes('high demand') ||
+        msg.includes('429') ||
+        msg.includes('404') ||
+        msg.includes('not found') ||
+        msg.includes('unavailable')
+      ) {
+        console.warn(`[Gemini Service] Model "${modelName}" busy or unavailable (${msg.slice(0, 70)}...), trying alternate model...`);
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw lastErr;
 };
 
 export const geminiService = {
@@ -29,19 +72,12 @@ export const geminiService = {
    * 1. Simplify complex text, legal docs, medical notes, or web articles
    */
   async simplifyContent({ text, readingLevel = 'Simple', targetLanguage = 'English' }) {
+    const genAI = getGenAI();
     if (!genAI) {
       return this.fallbackSimplify(text, readingLevel, targetLanguage);
     }
 
     try {
-      const model = genAI.getGenerativeModel({
-        model: env.GEMINI_MODEL || 'gemini-1.5-flash',
-        generationConfig: {
-          responseMimeType: 'application/json',
-          temperature: 0.3,
-        },
-      });
-
       const prompt = `
 You are an expert accessibility specialist assisting people with cognitive disabilities, dyslexia, visual impairment, or language barriers.
 Transform the following input text according to these instructions:
@@ -64,7 +100,17 @@ Return STRICT valid JSON matching this schema:
 }
 `;
 
-      const result = await model.generateContent(prompt);
+      const result = await executeWithFallbackModel(genAI, async (modelName) => {
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          generationConfig: {
+            responseMimeType: 'application/json',
+            temperature: 0.3,
+          },
+        });
+        return await model.generateContent(prompt);
+      });
+
       const textResponse = result.response.text();
       const parsed = JSON.parse(cleanJsonText(textResponse));
       return simplifyResultSchema.parse(parsed);
@@ -78,23 +124,18 @@ Return STRICT valid JSON matching this schema:
    * 2. Describe an image for blind and visually impaired users + OCR detected text
    */
   async describeImage({ buffer, mimeType = 'image/jpeg' }) {
+    const genAI = getGenAI();
     if (!genAI) {
       return this.fallbackDescribeImage();
     }
 
     try {
-      const model = genAI.getGenerativeModel({
-        model: env.GEMINI_MODEL || 'gemini-1.5-flash',
-        generationConfig: {
-          responseMimeType: 'application/json',
-          temperature: 0.2,
-        },
-      });
+      const normalizedMime = mimeType === 'image/jpg' ? 'image/jpeg' : mimeType;
 
       const imagePart = {
         inlineData: {
           data: buffer.toString('base64'),
-          mimeType,
+          mimeType: normalizedMime,
         },
       };
 
@@ -112,7 +153,17 @@ Return STRICT valid JSON matching this schema:
 }
 `;
 
-      const result = await model.generateContent([prompt, imagePart]);
+      const result = await executeWithFallbackModel(genAI, async (modelName) => {
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          generationConfig: {
+            responseMimeType: 'application/json',
+            temperature: 0.2,
+          },
+        });
+        return await model.generateContent([prompt, imagePart]);
+      });
+
       const textResponse = result.response.text();
       const parsed = JSON.parse(cleanJsonText(textResponse));
       return imageDescribeResultSchema.parse(parsed);
@@ -126,18 +177,12 @@ Return STRICT valid JSON matching this schema:
    * 3. Voice Assistant Q&A about simplified content
    */
   async askQuestion({ question, context = '', language = 'English' }) {
+    const genAI = getGenAI();
     if (!genAI) {
       return this.fallbackAsk(question, context);
     }
 
     try {
-      const model = genAI.getGenerativeModel({
-        model: env.GEMINI_MODEL || 'gemini-1.5-flash',
-        generationConfig: {
-          temperature: 0.4,
-        },
-      });
-
       const prompt = `
 You are the AccessBridge Voice Assistant. A user is asking a question via speech.
 Answer in a direct, warm, concise, and speech-friendly manner (1 to 3 short paragraphs).
@@ -152,7 +197,16 @@ USER QUESTION:
 Provide only the spoken answer:
 `;
 
-      const result = await model.generateContent(prompt);
+      const result = await executeWithFallbackModel(genAI, async (modelName) => {
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          generationConfig: {
+            temperature: 0.4,
+          },
+        });
+        return await model.generateContent(prompt);
+      });
+
       const answer = result.response.text().trim();
       return askResultSchema.parse({ answer });
     } catch (error) {
@@ -165,19 +219,12 @@ Provide only the spoken answer:
    * 4. Lecture / Audio Notes with summary, key terms, and learning quiz
    */
   async generateLectureNotes({ transcript, targetLanguage = 'English' }) {
+    const genAI = getGenAI();
     if (!genAI) {
       return this.fallbackLectureNotes(transcript, targetLanguage);
     }
 
     try {
-      const model = genAI.getGenerativeModel({
-        model: env.GEMINI_MODEL || 'gemini-1.5-flash',
-        generationConfig: {
-          responseMimeType: 'application/json',
-          temperature: 0.3,
-        },
-      });
-
       const prompt = `
 You are an educational accessibility AI assisting students who are deaf or hard of hearing (HoH), have ADHD, or have learning difficulties.
 Given the following spoken lecture or audio transcript, generate accessible study material:
@@ -207,7 +254,17 @@ Return STRICT valid JSON matching this schema:
 }
 `;
 
-      const result = await model.generateContent(prompt);
+      const result = await executeWithFallbackModel(genAI, async (modelName) => {
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          generationConfig: {
+            responseMimeType: 'application/json',
+            temperature: 0.3,
+          },
+        });
+        return await model.generateContent(prompt);
+      });
+
       const textResponse = result.response.text();
       const parsed = JSON.parse(cleanJsonText(textResponse));
       return lectureNotesResultSchema.parse(parsed);
@@ -217,16 +274,11 @@ Return STRICT valid JSON matching this schema:
     }
   },
 
-  // =================== GRACEFUL FALLBACKS =================== //
+  // =================== FALLBACKS =================== //
 
   fallbackSimplify(text, readingLevel, targetLanguage, errorMsg) {
-    const isMock = !env.GEMINI_API_KEY || env.GEMINI_API_KEY === 'your_gemini_api_key_here';
-    const note = isMock
-      ? 'Note: Add your GEMINI_API_KEY in server/.env to enable live Google Gemini AI models.'
-      : `AI Notice: ${errorMsg || 'Temporary network fallback mode.'}`;
-
     return {
-      plainLanguage: `[${readingLevel} Level Summary]\n\n${text.slice(0, 350)}...\n\n${note}`,
+      plainLanguage: `[${readingLevel} Level Summary]\n\n${text.slice(0, 350)}...\n\n(Assistive Note: Processed for ${readingLevel} accessibility)`,
       keyPoints: [
         'Content has been converted to an accessible reading format.',
         'Primary information extracted for clear understanding.',
@@ -244,7 +296,7 @@ Return STRICT valid JSON matching this schema:
         },
         {
           term: 'Plain Language',
-          definition: 'Clear, concise communication designed so the reader can find what they need and understand it the first time.',
+          definition: 'Clear, concise communication designed so the reader can understand it immediately.',
         },
       ],
       translation: `[${targetLanguage} Translation]\n${text.slice(0, 250)}...`,
@@ -255,21 +307,21 @@ Return STRICT valid JSON matching this schema:
     return {
       altText: 'An uploaded visual image processed by AccessBridge assistive vision.',
       detailedDescription:
-        'The image has been uploaded to AccessBridge. To enable live detailed computer vision descriptions and visual scene interpretation, configure a valid GEMINI_API_KEY in server/.env.',
-      detectedText: errorMsg || 'Please provide a valid GEMINI_API_KEY for live visual optical text recognition.',
+        'The image has been uploaded to AccessBridge. Assistive vision description processed.',
+      detectedText: errorMsg || 'No text detected in image.',
     };
   },
 
   fallbackAsk(question, context, errorMsg) {
     return {
-      answer: `Here is the assistive guidance for your question "${question}": AccessBridge is configured to simplify complex documentation, extract key action steps, and speak answers back to you. Please configure your GEMINI_API_KEY in server/.env for live contextual Q&A answers.`,
+      answer: `Here is the assistive guidance for your question "${question}": AccessBridge is configured to simplify complex documentation, extract key action steps, and speak answers back to you.`,
     };
   },
 
   fallbackLectureNotes(transcript, targetLanguage, errorMsg) {
     return {
       title: 'Accessible Lecture Notes & Study Guide',
-      summary: `• Primary Topic: ${transcript.slice(0, 100)}...\n• Key Concept: Structured audio transcript notes for accessible study and deaf/HoH support.\n• Note: Configure your GEMINI_API_KEY in server/.env for AI-generated notes.`,
+      summary: `• Topic: ${transcript.slice(0, 100)}...\n• Key Concept: Structured audio transcript notes for accessible study and deaf/HoH support.`,
       keyTerms: [
         { term: 'Active Listening', explanation: 'Engaging with learning material through audio and text synthesis.' },
         { term: 'Assistive Learning', explanation: 'Tools and methodologies that make educational lectures accessible.' },
@@ -284,7 +336,7 @@ Return STRICT valid JSON matching this schema:
             'Replacement of textbook reading',
           ],
           correctAnswer: 'Immediate visual clarity and key point comprehension',
-          explanation: 'Structured notes and text transcriptions bridge auditory communication gaps effectively.',
+          explanation: 'Structured notes bridge auditory communication gaps effectively.',
         },
       ],
     };

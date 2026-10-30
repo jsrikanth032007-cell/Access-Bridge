@@ -17,7 +17,7 @@ export const env = {
   JWT_SECRET: process.env.JWT_SECRET || 'accessbridge_default_jwt_secret_key_2025',
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '7d',
   GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
-  GEMINI_MODEL: process.env.GEMINI_MODEL || 'gemini-1.5-flash',
+  GEMINI_MODEL: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
   MAX_FILE_SIZE_BYTES: parseInt(process.env.MAX_FILE_SIZE_BYTES || '10485760', 10), // 10MB
 };
 
