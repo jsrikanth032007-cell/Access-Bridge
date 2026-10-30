@@ -1,4 +1,5 @@
 import { geminiService } from '../services/geminiService.js';
+import { getSpokenAudioStream } from '../services/ttsService.js';
 import {
   extractTextFromPdf,
   extractTextFromTxt,
@@ -195,6 +196,25 @@ export const generateLectureNotes = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+};
+
+export const getTtsAudio = async (req, res) => {
+  try {
+    const text = (req.query.text || '').toString();
+    const lang = (req.query.lang || 'English').toString();
+
+    if (!text.trim()) {
+      return res.status(400).send('Missing text parameter');
+    }
+
+    const { audioBuffer, contentType } = await getSpokenAudioStream(text, lang);
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    res.send(audioBuffer);
+  } catch (error) {
+    console.warn('[TTS Controller] Audio generation notice:', error.message);
+    res.status(500).send('Audio generation failed');
   }
 };
 

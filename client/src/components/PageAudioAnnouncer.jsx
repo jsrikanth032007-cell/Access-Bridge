@@ -13,18 +13,28 @@ export default function PageAudioAnnouncer() {
       (settings.blindAccessibilityMode || settings.autoReadAloud) && hasSpokenApproval;
 
     if (shouldSpeak && prevPathRef.current !== location.pathname) {
-      const intro = PAGE_AUDIO_INTRODUCTIONS[location.pathname];
+      const activeLang = settings.preferredLanguage || 'English';
+      const langIntros = PAGE_AUDIO_INTRODUCTIONS[activeLang] || PAGE_AUDIO_INTRODUCTIONS.English;
+      const intro = langIntros ? langIntros[location.pathname] : null;
+
       if (intro) {
         // Short pause to allow previous speech to settle
         const timer = setTimeout(() => {
-          speakText(intro, settings.preferredLanguage || 'English');
+          speakText(intro, activeLang);
         }, 300);
         return () => clearTimeout(timer);
       }
     }
 
     prevPathRef.current = location.pathname;
-  }, [location.pathname, settings.blindAccessibilityMode, settings.autoReadAloud, hasSpokenApproval, settings.preferredLanguage, speakText]);
+  }, [
+    location.pathname,
+    settings.blindAccessibilityMode,
+    settings.autoReadAloud,
+    hasSpokenApproval,
+    settings.preferredLanguage,
+    speakText,
+  ]);
 
   return null;
 }

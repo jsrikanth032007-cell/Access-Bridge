@@ -91,7 +91,7 @@
       "disabilityTypes": [
         "visual"
       ],
-      "preferredLanguage": "Tamil",
+      "preferredLanguage": "Telugu",
       "readingLevel": "Simple",
       "fontSize": "xlarge",
       "dyslexiaFont": false,
@@ -99,10 +99,70 @@
       "reducedMotion": false,
       "autoReadAloud": true,
       "createdAt": "2026-10-30T08:50:16.850Z",
-      "updatedAt": "2026-10-30T09:27:50.154Z"
+      "updatedAt": "2026-10-30T10:15:05.720Z"
     }
   ],
   "histories": [
+    {
+      "_id": "0vncb89mmvustymu",
+      "userId": "ixrstbkwmvuqezdc",
+      "featureType": "describe-image",
+      "title": "Horseeee.jpg",
+      "inputData": {
+        "fileName": "Horseeee.jpg",
+        "fileSize": 52059,
+        "mimeType": "image/jpeg"
+      },
+      "outputData": {
+        "altText": "A black horse stands proudly in a tall grass field under a cloudy sky as a bird flies overhead in black and white.",
+        "detailedDescription": "This monochrome image depicts a powerful black horse standing centrally in a vast field of tall, swaying grass. The horse faces slightly to the left, its sleek coat gleaming in the subdued light, with its dark mane and forelock caught in a gentle breeze. In the upper left quadrant, a single bird is captured mid-flight, banking downwards against a dramatic, heavily clouded sky. The composition creates a serene yet powerful atmosphere, emphasizing scale and solitude. The color palette consists entirely of rich grays, deep blacks, and soft whites, with natural lighting casting soft shadows and highlighting the texture of both the horse's coat and the surrounding grass.",
+        "detectedText": "No text detected in image"
+      },
+      "language": "English",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T09:57:54.966Z",
+      "updatedAt": "2026-10-30T09:57:54.966Z"
+    },
+    {
+      "_id": "icjts0ndmvustb28",
+      "userId": "ixrstbkwmvuqezdc",
+      "featureType": "describe-image",
+      "title": "Horseeee.jpg",
+      "inputData": {
+        "fileName": "Horseeee.jpg",
+        "fileSize": 52059,
+        "mimeType": "image/jpeg"
+      },
+      "outputData": {
+        "altText": "புல்வெளியில் நிற்கும் கறுப்புக் குதிரை மற்றும் அதன் மேலே பறக்கும் ஒரு பறவை.",
+        "detailedDescription": "இந்தப் படம் ஒரு கருப்பு மற்றும் வெள்ளை (Monochrome) புகைப்படமாகும். இதில் ஒரு பெரிய கறுப்பு நிறக் குதிரை உயரமான புல்வெளியின் நடுவில் கம்பீரமாக நிற்கிறது. குதிரையின் தலை சற்று வலதுபுறமாகத் திரும்பி உள்ளது, அதன் கருமையான தலைமுடியும் பிடறியும் காற்றில் பறக்கின்றன. குதிரையின் உடல் வாகு மிகவும் வலுவாகவும் நேர்த்தியாகவும் உள்ளது. குதிரைக்கு சற்று மேலே, இடது பக்கத்தில் ஒரு பறவை வானத்தில் பறந்து கொண்டிருக்கிறது. பின்னணியில் மூடிய மேகங்களுடன் கூடிய சாம்பல் நிற வானம் மற்றும் பரந்த புல்வெளி காணப்படுகிறது. ஒட்டுமொத்தப் படமும் ஒரு அமைதியான, அதே சமயம் கம்பீரமான உணர்வைத் தருகிறது.",
+        "detectedText": "படத்தில் எந்த உரையும் கண்டறியப்படவில்லை"
+      },
+      "language": "Tamil",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T09:57:24.416Z",
+      "updatedAt": "2026-10-30T09:57:24.416Z"
+    },
+    {
+      "_id": "oh7pttqtmvusr6fp",
+      "userId": "ixrstbkwmvuqezdc",
+      "featureType": "describe-image",
+      "title": "Horseeee.jpg",
+      "inputData": {
+        "fileName": "Horseeee.jpg",
+        "fileSize": 52059,
+        "mimeType": "image/jpeg"
+      },
+      "outputData": {
+        "altText": "புல்வெளியில் நிற்கும் கரிய குதிரையும், மேலே பறக்கும் பறவையும் கொண்ட கருப்பு வெள்ளை படம்.",
+        "detailedDescription": "இது ஒரு கருப்பு வெள்ளை (black and white) புகைப்படம். படத்தில் ஒரு பெரிய கரிய குதிரை அடர்த்தியான புல்வெளியில் கம்பீரமாக நிற்கிறது. அதன் தலை சற்று வலதுபுறம் திரும்பி உள்ளது, மேலும் அதன் கருமையான பிடரி மயிர் காற்றில் பறக்கிறது. குதிரையின் இடது மேல் பகுதியில், மேகமூட்டமான வானத்தில் ஒரு பறவை பறந்து கொண்டிருக்கிறது. பின்னணியில் மூடிய மேகங்களுடன் கூடிய வானமும், கீழே பரந்த புல்வெளியும் தெரிகின்றன. இந்தப்படம் அமைதியான மற்றும் சற்று நாடகத்தனமான (dramatic) சூழலை வெளிப்படுத்துகிறது.",
+        "detectedText": "படத்தில் எந்த உரையும் கண்டறியப்படவில்லை"
+      },
+      "language": "Tamil",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T09:55:45.109Z",
+      "updatedAt": "2026-10-30T09:55:45.109Z"
+    },
     {
       "_id": "sgs341vvmvurjxqg",
       "userId": "ixrstbkwmvuqezdc",

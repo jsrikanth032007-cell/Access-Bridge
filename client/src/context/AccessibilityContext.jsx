@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext.jsx';
 import api from '../services/api.js';
-import { LANGUAGE_CODES, LANGUAGE_VOICE_NAMES } from '../hooks/useTTS.js';
+import { playSpeech } from '../services/audioPlayer.js';
 
 const AccessibilityContext = createContext(null);
 
@@ -21,14 +21,66 @@ export const ACCESSIBLE_GREETINGS = {
 };
 
 export const PAGE_AUDIO_INTRODUCTIONS = {
-  '/': 'Home page. AccessBridge converts complex documents, medical notices, and images into plain language and speech.',
-  '/dashboard': 'Dashboard. Choose Content Simplifier, Image Describer, Voice Assistant, or Lecture Notes.',
-  '/simplify': 'Content Simplifier. Paste text, enter URL, or upload PDF to generate plain language, 3 key points, and translations.',
-  '/describe-image': 'Image Describer. Upload any diagram or photo to hear detailed scene descriptions, screen-reader alt text, and visible OCR text.',
-  '/voice-assistant': 'Voice Assistant. Speak your questions hands-free or choose your language to talk with the assistant.',
-  '/lecture-notes': 'Lecture Notes. Convert recorded transcripts into structured summaries and a 3-question learning quiz.',
-  '/history': 'Saved History. Review and listen to your past simplifications and image descriptions.',
-  '/profile': 'Accessibility Profile. Configure reading level, language, text scaling, and sensory settings.',
+  English: {
+    '/': 'Home page. AccessBridge converts complex documents, medical notices, and images into plain language and speech.',
+    '/dashboard': 'Dashboard. Choose Content Simplifier, Image Describer, Voice Assistant, or Lecture Notes.',
+    '/simplify': 'Content Simplifier. Paste text, enter URL, or upload PDF to generate plain language, 3 key points, and translations.',
+    '/describe-image': 'Image Describer. Upload any diagram or photo to hear detailed scene descriptions, screen-reader alt text, and visible OCR text.',
+    '/voice-assistant': 'Voice Assistant. Speak your questions hands-free or choose your language to talk with the assistant.',
+    '/lecture-notes': 'Lecture Notes. Convert recorded transcripts into structured summaries and a 3-question learning quiz.',
+    '/history': 'Saved History. Review and listen to your past simplifications and image descriptions.',
+    '/profile': 'Accessibility Profile. Configure reading level, language, text scaling, and sensory settings.',
+  },
+  Tamil: {
+    '/': 'முகப்புப் பக்கம். AccessBridge சிக்கலான ஆவணங்கள் மற்றும் படங்களை எளிய மொழி மற்றும் குரலாக மாற்றுகிறது.',
+    '/dashboard': 'டாஷ்போர்டு. உள்ளடக்க எளிதாக்கி, பட விவரிப்பான், குரல் உதவியாளர் அல்லது விரிவுரை குறிப்புகளைத் தேர்ந்தெடுக்கவும்.',
+    '/simplify': 'உள்ளடக்க எளிதாக்கி. எளிய விளக்கம், முக்கிய குறிப்புகள் மற்றும் மொழிபெயர்ப்பு பெற உரையை உள்ளிடவும் அல்லது கோப்பைப் பதிவேற்றவும்.',
+    '/describe-image': 'பட விவரிப்பான். படங்களின் விரிவான விளக்கம் மற்றும் உரையை அறிய படத்தைப் பதிவேற்றவும்.',
+    '/voice-assistant': 'குரல் உதவியாளர். உங்கள் கேள்விகளைத் தமிழில் பேசி உடனடியாக குரல் வழியே பதில்களைப் பெறலாம்.',
+    '/lecture-notes': 'விரிவுரை குறிப்புகள். ஆடியோ உரைவடிவத்தை உள்ளிட்டு எளிய சுருக்கம் மற்றும் கற்றல் வினாடி வினாவைப் பெறலாம்.',
+    '/history': 'சேமிக்கப்பட்ட வரலாறு. உங்கள் கடந்த கால முடிவுகளைக் கேட்கவும் மதிப்பாய்வு செய்யவும்.',
+    '/profile': 'அணுகல்தன்மை சுயவிவரம். மொழி, எழுத்து அளவு மற்றும் பார்வை அமைப்புகளைத் தனிப்பயனாக்குங்கள்.',
+  },
+  Hindi: {
+    '/': 'मुख्य पृष्ठ। एक्सेसब्रिज जटिल दस्तावेज़ों और छवियों को सरल भाषा और ऑडियो में बदलता है।',
+    '/dashboard': 'डैशबोर्ड। कंटेंट सिंपलीफायर, इमेज डिस्क्राइबर, वॉयस असिस्टेंट या लेक्चर नोट्स चुनें।',
+    '/simplify': 'कंटेंट सिंपलीफायर। सरल भाषा, मुख्य बिंदु और अनुवाद प्राप्त करने के लिए टेक्स्ट दर्ज करें या पीडीएफ अपलोड करें।',
+    '/describe-image': 'इमेज डिस्क्राइबर। विस्तृत दृश्य विवरण और ओसीआर टेक्स्ट सुनने के लिए कोई भी छवि अपलोड करें।',
+    '/voice-assistant': 'वॉयस असिस्टेंट। हैंड्स-फ्री सवाल बोलें और अपनी भाषा में उत्तर सुनें।',
+    '/lecture-notes': 'लेक्चर नोट्स। रिकॉर्ड किए गए प्रतिलेख को संक्षिप्त सारांश और 3-प्रश्नों की क्विज में बदलें।',
+    '/history': 'सहेजा गया इतिहास। अपने पिछले परिणामों को सुनें और समीक्षा करें।',
+    '/profile': 'अभिगम्यता प्रोफ़ाइल। भाषा, फ़ॉन्ट आकार और प्राथमिकताओं को अनुकूलित करें।',
+  },
+  Telugu: {
+    '/': 'హోమ్ పేజీ. యాక్సెస్ బ్రిడ్జ్ సంక్లిష్టమైన పత్రాలు మరియు చిత్రాలను సరళమైన భాష మరియు ఆడియోగా మారుస్తుంది.',
+    '/dashboard': 'డ్యాష్‌బోర్డ్. కంటెంట్ సింప్లిఫైయర్, ఇమేజ్ డిస్క్రైబర్, వాయిస్ అసిస్టెంట్ లేదా లెక్చర్ నోట్స్ ఎంచుకోండి.',
+    '/simplify': 'కంటెంట్ సింప్లిఫైయర్. సరళమైన భాష, ముఖ్య అంశాలు మరియు అనువాదాల కోసం వచనాన్ని నమోదు చేయండి.',
+    '/describe-image': 'ఇమేజ్ డిస్క్రైబర్. వివరణాత్మక దృశ్య సమాచారం మరియు OCR వచనాన్ని వినడానికి చిత్రాన్ని అప్‌లోడ్ చేయండి.',
+    '/voice-assistant': 'వాయిస్ అసిస్టెంట్. మీ ప్రశ్నలను మాట్లాడండి మరియు సహాయకునితో మీ భాషలో మాట్లాడండి.',
+    '/lecture-notes': 'లెక్చర్ నోట్స్. ట్రాన్స్‌క్రిప్ట్‌లను నిర్మాణాత్మక సారాంశాలు మరియు 3-ప్రశ్నల క్విజ్‌గా మార్చండి.',
+    '/history': 'భద్రపరిచిన చరిత్ర. మీ గత ఫలితాలను వినండి మరియు సమీక్షించండి.',
+    '/profile': 'యాక్సెసిబిలిటీ ప్రొఫైల్. పఠన స్థాయి, భాష, ఫాంట్ పరిమాణాన్ని సెట్ చేసుకోండి.',
+  },
+  Malayalam: {
+    '/': 'ഹോം പേജ്. ആക്‌സസ് ബ്രിഡ്ജ് സങ്കീർണ്ണമായ രേഖകളും ചിത്രങ്ങളും ലളിതമായ ഭാഷയിലേക്കും ഓഡിയോയിലേക്കും മാറ്റുന്നു.',
+    '/dashboard': 'ഡാഷ്‌ബോർഡ്. കണ്ടന്റ് സിംപ്ലിഫയർ, ഇമേജ് ഡിസ്ക്രൈബർ, വോയ്‌സ് അസിസ്റ്റന്റ് അല്ലെങ്കിൽ ലക്ചർ നോട്സ് തിരഞ്ഞെടുക്കുക.',
+    '/simplify': 'കണ്ടന്റ് സിംപ്ലിഫയർ. ലളിതമായ ഭാഷയും വിവർത്തനവും ലഭിക്കാൻ ടെക്സ്റ്റ് നൽകുക അല്ലെങ്കിൽ ഫയൽ അപ്‌ലോഡ് ചെയ്യുക.',
+    '/describe-image': 'ഇമേജ് ഡിസ്ക്രൈബർ. വിശദമായ വിവരണവും ചിത്രത്തിലെ ടെക്സ്റ്റും അറിയാൻ ചിത്രം അപ്‌ലോഡ് ചെയ്യുക.',
+    '/voice-assistant': 'വോയ്‌സ് അസിസ്റ്റന്റ്. സംശയങ്ങൾ ചോദിക്കാനും ഓഡിയോയിൽ ഉത്തരം കേൾക്കാനും മൈക്ക് ഉപയോഗിക്കുക.',
+    '/lecture-notes': 'ലക്ചർ നോട്സ്. റെക്കോർഡിംഗ് വിവരങ്ങൾ ലളിതമായ സംഗ്രഹവും ക്വിസുമാക്കി മാറ്റുക.',
+    '/history': 'സേവ് ചെയ്ത ചരിത്രം. മുൻ ഫലങ്ങൾ കേൾക്കുകയും പരിശോധിക്കുകയും ചെയ്യുക.',
+    '/profile': 'ആക്സസിബിലിറ്റി പ്രൊഫൈൽ. ഭാഷയും ഫോണ്ട് വലുപ്പവും ആവശ്യാനുസരണം മാറ്റുക.',
+  },
+  Kannada: {
+    '/': 'ಮುಖಪುಟ. ಆಕ್ಸೆಸ್ ಬ್ರಿಡ್ಜ್ ಸಂಕೀರ್ಣ ದಾಖಲೆಗಳು ಮತ್ತು ಚಿತ್ರಗಳನ್ನು ಸರಳ ಭಾಷೆ ಮತ್ತು ಧ್ವನಿಗೆ ಪರಿವರ್ತಿಸುತ್ತದೆ.',
+    '/dashboard': 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್. ವಿಷಯ ಸರಳೀಕಾರಕ, ಚಿತ್ರ ವಿವರಣೆ, ಧ್ವನಿ ಸಹಾಯಕ ಅಥವಾ ಉಪನ್ಯಾಸ ಟಿಪ್ಪಣಿಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ.',
+    '/simplify': 'ವಿಷಯ ಸರಳೀಕಾರಕ. ಸರಳ ವಿವರಣೆ ಮತ್ತು ಅನುವಾದ ಪಡೆಯಲು ಪಠ್ಯವನ್ನು ನಮೂದಿಸಿ ಅಥವಾ ಫೈಲ್ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.',
+    '/describe-image': 'ಚಿತ್ರ ವಿವರಣೆ. ಚಿತ್ರದ ವಿವರ ಮತ್ತು ಪಠ್ಯವನ್ನು ಕೇಳಲು ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.',
+    '/voice-assistant': 'ಧ್ವನಿ ಸಹಾಯಕ. ನಿಮ್ಮ ಪ್ರಶ್ನೆಗಳನ್ನು ಮಾತನಾಡಿ ಮತ್ತು ಉತ್ತರವನ್ನು ಆಲಿಸಿ.',
+    '/lecture-notes': 'ಉಪನ್ಯಾಸ ಟಿಪ್ಪಣಿಗಳು. ಪ್ರತಿಲಿಪಿಯನ್ನು ಸರಳ ಸಾರಾಂಶ ಮತ್ತು ರಸಪ್ರಶ್ನೆಯಾಗಿ ಪರಿವರ್ತಿಸಿ.',
+    '/history': 'ಉಳಿಸಿದ ಇತಿಹಾಸ. ನಿಮ್ಮ ಹಿಂದಿನ ಫಲಿತಾಂಶಗಳನ್ನು ಆಲಿಸಿ ಮತ್ತು ಪರಿಶೀಲಿಸಿ.',
+    '/profile': 'ಪ್ರವೇಶಿಸುವಿಕೆ ಪ್ರೊಫೈಲ್. ಓದುವ ಮಟ್ಟ, ಭಾಷೆ ಮತ್ತು ಫಾಂಟ್ ಗಾತ್ರವನ್ನು ಹೊಂದಿಸಿ.',
+  },
 };
 
 const DEFAULT_SETTINGS = {
@@ -123,33 +175,9 @@ export const AccessibilityProvider = ({ children }) => {
     }
   }, [settings]);
 
-  // General Speak Helper
+  // Universal Multilingual Speech Helper
   const speakText = useCallback((text, langName = 'English') => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-    try {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      const targetCode = LANGUAGE_CODES[langName] || 'en-US';
-      utterance.lang = targetCode;
-      utterance.rate = 0.95;
-
-      const voices = window.speechSynthesis.getVoices() || [];
-      if (voices.length > 0) {
-        const prefix = targetCode.toLowerCase().split('-')[0];
-        const keywords = LANGUAGE_VOICE_NAMES[langName] || [prefix];
-        const match =
-          voices.find((v) => v.lang && v.lang.toLowerCase().replace('_', '-') === targetCode.toLowerCase()) ||
-          voices.find((v) => v.lang && v.lang.toLowerCase().startsWith(prefix)) ||
-          voices.find((v) => keywords.some((kw) => (v.name || '').toLowerCase().includes(kw.toLowerCase())));
-
-        if (match) {
-          utterance.voice = match;
-        }
-      }
-      window.speechSynthesis.speak(utterance);
-    } catch (e) {
-      console.warn('[speakText error]:', e);
-    }
+    playSpeech(text, langName);
   }, []);
 
   // Approves speech for blind person / user device
@@ -214,8 +242,17 @@ export const AccessibilityProvider = ({ children }) => {
   };
   const setPreferredLanguage = (lang) => {
     updateSettings({ preferredLanguage: lang });
-    // Announce language change aloud
-    speakText(`Language changed to ${lang}`, lang);
+    // Announce language change aloud in the selected language
+    const langChangeNotices = {
+      English: `Language set to English`,
+      Tamil: `மொழி தமிழுக்கு மாற்றப்பட்டது`,
+      Hindi: `भाषा हिन्दी में बदल दी गई है`,
+      Telugu: `భాష తెలుగుకి మార్చబడింది`,
+      Malayalam: `ഭാഷ മലയാളത്തിലേക്ക് മാറ്റി`,
+      Kannada: `ಭಾಷೆಯನ್ನು ಕನ್ನಡಕ್ಕೆ ಬದಲಾಯಿಸಲಾಗಿದೆ`,
+    };
+    const notice = langChangeNotices[lang] || `Language set to ${lang}`;
+    speakText(notice, lang);
   };
   const setReadingLevel = (level) => updateSettings({ readingLevel: level });
 
@@ -248,3 +285,5 @@ export const useAccessibility = () => {
   }
   return context;
 };
+
+export default AccessibilityContext;
