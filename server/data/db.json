@@ -1,0 +1,344 @@
+{
+  "users": [
+    {
+      "_id": "9gc2fuwomvuocmem",
+      "name": "Alex Johnson",
+      "email": "test_1793346747383@accessbridge.org",
+      "password": "$2a$10$0RRFU9RfqeZMn7tdn.0hx.eMKMcwpsd9.P4Y74/etPVRsaQQkSg4.",
+      "createdAt": "2026-10-30T07:52:27.502Z",
+      "updatedAt": "2026-10-30T07:52:27.503Z"
+    },
+    {
+      "_id": "3akd9sqtmvuohgpy",
+      "name": "Samira Patel",
+      "email": "demo@accessbridge.org",
+      "password": "$2a$10$Ar4QrrPmgCGBRW81Ogy7x.SXJfU61jJF058Suu.kOMe1oUvdODdW6",
+      "createdAt": "2026-10-30T07:56:13.414Z",
+      "updatedAt": "2026-10-30T07:56:13.415Z"
+    },
+    {
+      "_id": "2346a6nlmvupzxnt",
+      "name": "Alex Johnson",
+      "email": "test_1793349514684@accessbridge.org",
+      "password": "$2a$10$BuNIpubBZZbX1bEKXXXv5.HEtXxpHFerHrCMdJUqkneTkqH6v3P16",
+      "createdAt": "2026-10-30T08:38:34.793Z",
+      "updatedAt": "2026-10-30T08:38:34.794Z"
+    }
+  ],
+  "profiles": [
+    {
+      "_id": "fnzyrb2pmvuocmep",
+      "userId": "9gc2fuwomvuocmem",
+      "disabilityTypes": [
+        "visual",
+        "dyslexia"
+      ],
+      "preferredLanguage": "Tamil",
+      "readingLevel": "Very Simple",
+      "fontSize": "large",
+      "dyslexiaFont": true,
+      "highContrast": true,
+      "reducedMotion": false,
+      "autoReadAloud": true,
+      "createdAt": "2026-10-30T07:52:27.505Z",
+      "updatedAt": "2026-10-30T07:52:27.596Z"
+    },
+    {
+      "_id": "iodfm7c1mvuohgq1",
+      "userId": "3akd9sqtmvuohgpy",
+      "disabilityTypes": [
+        "visual",
+        "dyslexia"
+      ],
+      "preferredLanguage": "English",
+      "readingLevel": "Simple",
+      "fontSize": "large",
+      "dyslexiaFont": true,
+      "highContrast": false,
+      "reducedMotion": false,
+      "autoReadAloud": true,
+      "createdAt": "2026-10-30T07:56:13.417Z",
+      "updatedAt": "2026-10-30T07:56:13.417Z"
+    },
+    {
+      "_id": "vi4s77yvmvupzxnw",
+      "userId": "2346a6nlmvupzxnt",
+      "disabilityTypes": [
+        "visual",
+        "dyslexia"
+      ],
+      "preferredLanguage": "Tamil",
+      "readingLevel": "Very Simple",
+      "fontSize": "large",
+      "dyslexiaFont": true,
+      "highContrast": true,
+      "reducedMotion": false,
+      "autoReadAloud": true,
+      "createdAt": "2026-10-30T08:38:34.796Z",
+      "updatedAt": "2026-10-30T08:38:34.884Z"
+    }
+  ],
+  "histories": [
+    {
+      "_id": "4y7ppv3omvupzxz5",
+      "userId": "3akd9sqtmvuohgpy",
+      "featureType": "lecture-notes",
+      "title": "Accessible Lecture Notes & Study Guide",
+      "inputData": {
+        "transcriptSnippet": "Today we discuss sound waves. Sound is a longitudinal mechanical wave that travels through matter by compressing and decompressing particles."
+      },
+      "outputData": {
+        "title": "Accessible Lecture Notes & Study Guide",
+        "summary": "• Primary Topic: Today we discuss sound waves. Sound is a longitudinal mechanical wave that travels through matter by...\n• Key Concept: Structured audio transcript notes for accessible study and deaf/HoH support.\n• Note: Configure your GEMINI_API_KEY in server/.env for AI-generated notes.",
+        "keyTerms": [
+          {
+            "term": "Active Listening",
+            "explanation": "Engaging with learning material through audio and text synthesis."
+          },
+          {
+            "term": "Assistive Learning",
+            "explanation": "Tools and methodologies that make educational lectures accessible."
+          }
+        ],
+        "quiz": [
+          {
+            "question": "What is the primary benefit of structured lecture notes for students with hearing difficulties?",
+            "options": [
+              "Immediate visual clarity and key point comprehension",
+              "Shorter study hours only",
+              "Automatic exam exemptions",
+              "Replacement of textbook reading"
+            ],
+            "correctAnswer": "Immediate visual clarity and key point comprehension",
+            "explanation": "Structured notes and text transcriptions bridge auditory communication gaps effectively."
+          }
+        ]
+      },
+      "language": "English",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T08:38:35.201Z",
+      "updatedAt": "2026-10-30T08:38:35.201Z"
+    },
+    {
+      "_id": "tzuk3blemvupzxyw",
+      "userId": "3akd9sqtmvuohgpy",
+      "featureType": "simplify",
+      "title": "The aforementioned indemnification claus...",
+      "inputData": {
+        "textSnippet": "The aforementioned indemnification clause shall hold harmless the lessor against any and all liabilities, torts, or damages incurred pursuant to lease execution.",
+        "source": "text"
+      },
+      "outputData": {
+        "plainLanguage": "[Very Simple Level Summary]\n\nThe aforementioned indemnification clause shall hold harmless the lessor against any and all liabilities, torts, or damages incurred pursuant to lease execution....\n\nNote: Add your GEMINI_API_KEY in server/.env to enable live Google Gemini AI models.",
+        "keyPoints": [
+          "Content has been converted to an accessible reading format.",
+          "Primary information extracted for clear understanding.",
+          "Review the action steps below for immediate tasks."
+        ],
+        "actionSteps": [
+          "Review the key points above to verify the essentials.",
+          "Use the text-to-speech button to listen to this summary.",
+          "Save this record to your accessibility history for future reference."
+        ],
+        "glossary": [
+          {
+            "term": "Accessibility",
+            "definition": "Ensuring digital information can be accessed and understood by everyone regardless of ability."
+          },
+          {
+            "term": "Plain Language",
+            "definition": "Clear, concise communication designed so the reader can find what they need and understand it the first time."
+          }
+        ],
+        "translation": "[English Translation]\nThe aforementioned indemnification clause shall hold harmless the lessor against any and all liabilities, torts, or damages incurred pursuant to lease execution...."
+      },
+      "language": "English",
+      "readingLevel": "Very Simple",
+      "createdAt": "2026-10-30T08:38:35.192Z",
+      "updatedAt": "2026-10-30T08:38:35.192Z"
+    },
+    {
+      "_id": "htzhfx8jmvuoihaz",
+      "userId": "3akd9sqtmvuohgpy",
+      "featureType": "lecture-notes",
+      "title": "Accessible Lecture Notes & Study Guide",
+      "inputData": {
+        "transcriptSnippet": "Today we discuss sound waves. Sound is a longitudinal mechanical wave that travels through matter by compressing and decompressing particles."
+      },
+      "outputData": {
+        "title": "Accessible Lecture Notes & Study Guide",
+        "summary": "• Primary Topic: Today we discuss sound waves. Sound is a longitudinal mechanical wave that travels through matter by...\n• Key Concept: Structured audio transcript notes for accessible study and deaf/HoH support.\n• Note: Configure your GEMINI_API_KEY in server/.env for AI-generated notes.",
+        "keyTerms": [
+          {
+            "term": "Active Listening",
+            "explanation": "Engaging with learning material through audio and text synthesis."
+          },
+          {
+            "term": "Assistive Learning",
+            "explanation": "Tools and methodologies that make educational lectures accessible."
+          }
+        ],
+        "quiz": [
+          {
+            "question": "What is the primary benefit of structured lecture notes for students with hearing difficulties?",
+            "options": [
+              "Immediate visual clarity and key point comprehension",
+              "Shorter study hours only",
+              "Automatic exam exemptions",
+              "Replacement of textbook reading"
+            ],
+            "correctAnswer": "Immediate visual clarity and key point comprehension",
+            "explanation": "Structured notes and text transcriptions bridge auditory communication gaps effectively."
+          }
+        ]
+      },
+      "language": "English",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T07:57:00.827Z",
+      "updatedAt": "2026-10-30T07:57:00.827Z"
+    },
+    {
+      "_id": "g32zmnlxmvuoihap",
+      "userId": "3akd9sqtmvuohgpy",
+      "featureType": "simplify",
+      "title": "The aforementioned indemnification claus...",
+      "inputData": {
+        "textSnippet": "The aforementioned indemnification clause shall hold harmless the lessor against any and all liabilities, torts, or damages incurred pursuant to lease execution.",
+        "source": "text"
+      },
+      "outputData": {
+        "plainLanguage": "[Very Simple Level Summary]\n\nThe aforementioned indemnification clause shall hold harmless the lessor against any and all liabilities, torts, or damages incurred pursuant to lease execution....\n\nNote: Add your GEMINI_API_KEY in server/.env to enable live Google Gemini AI models.",
+        "keyPoints": [
+          "Content has been converted to an accessible reading format.",
+          "Primary information extracted for clear understanding.",
+          "Review the action steps below for immediate tasks."
+        ],
+        "actionSteps": [
+          "Review the key points above to verify the essentials.",
+          "Use the text-to-speech button to listen to this summary.",
+          "Save this record to your accessibility history for future reference."
+        ],
+        "glossary": [
+          {
+            "term": "Accessibility",
+            "definition": "Ensuring digital information can be accessed and understood by everyone regardless of ability."
+          },
+          {
+            "term": "Plain Language",
+            "definition": "Clear, concise communication designed so the reader can find what they need and understand it the first time."
+          }
+        ],
+        "translation": "[English Translation]\nThe aforementioned indemnification clause shall hold harmless the lessor against any and all liabilities, torts, or damages incurred pursuant to lease execution...."
+      },
+      "language": "English",
+      "readingLevel": "Very Simple",
+      "createdAt": "2026-10-30T07:57:00.817Z",
+      "updatedAt": "2026-10-30T07:57:00.817Z"
+    },
+    {
+      "_id": "gsrzjxjkmvuohgq4",
+      "userId": "3akd9sqtmvuohgpy",
+      "featureType": "lecture-notes",
+      "title": "Clean Energy & Solar Photovoltaic Systems",
+      "inputData": {
+        "transcriptSnippet": "Welcome students. Today we examine semiconductor physics inside solar photovoltaic panels. When photons strike silicon, valence electrons absorb kinetic energy and flow across the p-n junction, generating direct electrical current."
+      },
+      "outputData": {
+        "title": "Clean Energy & Solar Photovoltaic Systems",
+        "summary": "• Solar panels work using semiconductors like silicon.\n• Light particles (photons) hit the silicon cell.\n• This knocks electrons loose, creating an electric current.\n• The resulting direct current (DC) is then converted for home use.",
+        "keyTerms": [
+          {
+            "term": "Photovoltaic (PV)",
+            "explanation": "The process of turning light particles directly into electricity."
+          },
+          {
+            "term": "Photon",
+            "explanation": "A tiny particle of light carrying radiant energy."
+          },
+          {
+            "term": "p-n Junction",
+            "explanation": "The boundary inside a semiconductor that guides electrical current in one direction."
+          }
+        ],
+        "quiz": [
+          {
+            "question": "What happens when light photons hit a solar cell?",
+            "options": [
+              "Electrons absorb energy and flow to create electricity",
+              "The solar panel turns into a battery",
+              "The silicon dissolves in water",
+              "The temperature drops to freezing"
+            ],
+            "correctAnswer": "Electrons absorb energy and flow to create electricity",
+            "explanation": "Photons transfer their energy to electrons, driving them across the junction as electric current."
+          }
+        ]
+      },
+      "language": "English",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T07:56:13.420Z",
+      "updatedAt": "2026-10-30T07:56:13.420Z"
+    },
+    {
+      "_id": "sq57wplbmvuohgq3",
+      "userId": "3akd9sqtmvuohgpy",
+      "featureType": "describe-image",
+      "title": "City Metro Station Accessibility Map",
+      "inputData": {
+        "fileName": "metro_accessibility_guide.png",
+        "mimeType": "image/png"
+      },
+      "outputData": {
+        "altText": "Color-coded metro line diagram highlighting wheelchair ramps and elevators.",
+        "detailedDescription": "A modern transport diagram showing North and South transit lines. Elevators are marked with bright blue circular icons with white wheelchair symbols at all major interchange terminals. Braille tactile path indicators run continuously from Platform 1 to Platform 3.",
+        "detectedText": "METRO TRANSIT ACCESSIBLE ROUTE • ELEVATOR ACCESS AT GATES 2 & 4 • TACTILE PAVING ACTIVE"
+      },
+      "language": "English",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T07:56:13.419Z",
+      "updatedAt": "2026-10-30T07:56:13.419Z"
+    },
+    {
+      "_id": "2h037635mvuohgq2",
+      "userId": "3akd9sqtmvuohgpy",
+      "featureType": "simplify",
+      "title": "Medical Discharge & Prescription Advisory",
+      "inputData": {
+        "source": "text",
+        "textSnippet": "Patient presents post-laparoscopic intervention. Continued ambulatory monitoring advised. Administer analgesics PRN, strictly refrain from lifting weight > 5kg, and ensure thromboprophylaxis stockings remain donned for 14 diurnal cycles."
+      },
+      "outputData": {
+        "plainLanguage": "You had a minor keyhole surgery and are now recovering at home. Take your pain medicine only when you feel pain. Do not lift heavy objects over 10 pounds (like heavy grocery bags). Wear your tight compression socks for 2 weeks to stop blood clots from forming in your legs.",
+        "keyPoints": [
+          "Take pain pills only when needed, not on an automatic timer.",
+          "Do not lift anything heavier than 5 kg (11 lbs) for the next 2 weeks.",
+          "Keep your medical socks on day and night for 14 days to keep blood flowing safely."
+        ],
+        "actionSteps": [
+          "Set a daily reminder to check your wound for redness or swelling.",
+          "Schedule your follow-up clinic appointment within 14 days.",
+          "Call your doctor immediately if you develop sudden shortness of breath or calf pain."
+        ],
+        "glossary": [
+          {
+            "term": "Laparoscopic",
+            "definition": "Keyhole surgery performed through very small cuts using a tiny camera."
+          },
+          {
+            "term": "PRN",
+            "definition": "A medical term meaning \"take only when needed\", not every hour."
+          },
+          {
+            "term": "Thromboprophylaxis",
+            "definition": "Medical prevention steps taken to stop dangerous blood clots from forming."
+          }
+        ],
+        "translation": "நீங்க அறுவைசிகிச்சை முடிஞ்சு வீடு திரும்பியிருக்கீங்க. வலி இருக்கும்போது மட்டும் வலி மாத்திரை போடுங்க. அடுத்த 2 வாரங்களுக்கு 5 கிலோவுக்கு மேலான எடையை தூக்காதீங்க."
+      },
+      "language": "English",
+      "readingLevel": "Simple",
+      "createdAt": "2026-10-30T07:56:13.418Z",
+      "updatedAt": "2026-10-30T07:56:13.418Z"
+    }
+  ]
+}

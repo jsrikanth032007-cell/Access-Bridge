@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --text-scale: 1rem;
+    --line-height-scale: 1.6;
+    --letter-spacing-scale: normal;
+  }
+
+  body {
+    font-size: var(--text-scale);
+    line-height: var(--line-height-scale);
+    letter-spacing: var(--letter-spacing-scale);
+  }
+
+  /* Accessible focus indicators WCAG 2.4.7 */
+  *:focus-visible {
+    outline: 3px solid #0c87eb !important;
+    outline-offset: 3px !important;
+    border-radius: 4px;
+  }
+}
+
+/* Dyslexia-Friendly Mode */
+body.font-dyslexic,
+.font-dyslexia {
+  font-family: 'Lexend', 'Comic Sans MS', sans-serif !important;
+  line-height: 1.8 !important;
+  letter-spacing: 0.05em !important;
+  word-spacing: 0.1em !important;
+}
+
+/* High Contrast Mode */
+body.high-contrast,
+.high-contrast-mode {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+body.high-contrast *:focus-visible,
+.high-contrast-mode *:focus-visible {
+  outline: 4px solid #fff000 !important;
+  outline-offset: 3px !important;
+}
+
+body.high-contrast .bg-white,
+body.high-contrast .bg-slate-50,
+body.high-contrast .bg-slate-100,
+body.high-contrast .bg-slate-800,
+body.high-contrast .bg-slate-900 {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #ffff00 !important;
+}
+
+body.high-contrast a,
+body.high-contrast button {
+  border-color: #ffff00 !important;
+}
+
+body.high-contrast a:hover,
+body.high-contrast button:hover {
+  background-color: #ffff00 !important;
+  color: #000000 !important;
+}
+
+body.high-contrast .text-slate-600,
+body.high-contrast .text-slate-500,
+body.high-contrast .text-slate-700,
+body.high-contrast .text-gray-600 {
+  color: #f1f5f9 !important;
+}
+
+/* Reduced Motion Mode */
+body.reduced-motion *,
+.reduced-motion-mode * {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Skip link */
+.skip-to-content-link {
+  position: absolute;
+  top: -9999px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000000;
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  z-index: 9999;
+  border: 2px solid #fff000;
+  font-weight: 700;
+  border-radius: 0 0 8px 8px;
+  text-decoration: underline;
+  transition: top 0.1s ease;
+}
+
+.skip-to-content-link:focus {
+  top: 0;
+}
+
