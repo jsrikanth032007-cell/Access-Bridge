@@ -8,6 +8,7 @@
     "node": ">=18.0.0"
   },
   "scripts": {
+    "build": "echo Backend build complete",
     "start": "node src/index.js",
     "dev": "node --watch-path=src src/index.js",
     "seed": "node src/seeds/seed.js"

@@ -4,6 +4,8 @@
   "description": "AccessBridge – AI for Accessibility & Inclusion (Full-stack Application)",
   "private": true,
   "scripts": {
+    "start": "npm start --prefix server",
+    "build": "npm run build --prefix client",
     "dev": "concurrently -n \"SERVER,CLIENT\" -c \"blue,green\" \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix client",
